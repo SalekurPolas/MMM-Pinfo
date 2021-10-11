@@ -116,7 +116,7 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
       <tr>
         <td><code>valueAlign</code></td>
         <td align=center><code>string</code></td>
-        <td align=center><code>'left'</code></td>
+        <td align=center><code>'center'</code></td>
         <td>Item's value alignment.</td>
       </tr>
       <tr>
