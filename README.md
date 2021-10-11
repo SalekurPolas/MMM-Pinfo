@@ -56,11 +56,12 @@ npm install
 | --------------- | --------
 | Model           | Display model name and number of the device
 | Serial          | Display the unique serial number of the device
-| Network         | Display connected network types like WLAN, LAN, etc
+| Network type    | Display connected network types like WLAN, LAN, etc
 | IPv4            | Display IPv4 of the corresponding network
 | IPv6            | Display IPv6 of the corresponding network
 | MAC             | Display MAC address of the corresponding network
 | RAM             | Display total size, usage, and percentage usage of the RAM
+| Storage         | Display total size, usage, and percentage usage of the Storage
 | CPU type        | Display CPU type of the device
 | CPU usage       | Display the percentage of usage 
 | CPU temp        | Display current temperature of the CPU
@@ -299,13 +300,13 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
         <td>Label of CPU Type</td>
       </tr>
       <tr>
-        <td><code>STORAGE.displayType</code></td>
+        <td><code>CPU.displayType</code></td>
         <td align=center><code>boolean</code></td>
         <td align=center><code>false</code></td>
         <td>Display CPU Type</td>
       </tr>
       <tr>
-        <td><code>STORAGE.orderType</code></td>
+        <td><code>CPU.orderType</code></td>
         <td align=center><code>number</code></td>
         <td align=center><code>10</code></td>
         <td>Order of CPU Type</td>
@@ -317,13 +318,13 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
         <td>Label of CPU Usage</td>
       </tr>
       <tr>
-        <td><code>STORAGE.displayUsage</code></td>
+        <td><code>CPU.displayUsage</code></td>
         <td align=center><code>boolean</code></td>
         <td align=center><code>false</code></td>
         <td>Display CPU Usage</td>
       </tr>
       <tr>
-        <td><code>STORAGE.orderUsage</code></td>
+        <td><code>CPU.orderUsage</code></td>
         <td align=center><code>number</code></td>
         <td align=center><code>11</code></td>
         <td>Order of CPU Usage</td>
@@ -335,13 +336,13 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
         <td>Label of CPU Temp</td>
       </tr>
       <tr>
-        <td><code>STORAGE.displayTemp</code></td>
+        <td><code>CPU.displayTemp</code></td>
         <td align=center><code>boolean</code></td>
         <td align=center><code>true</code></td>
         <td>Display CPU Temp</td>
       </tr>
       <tr>
-        <td><code>STORAGE.orderTemp</code></td>
+        <td><code>CPU.orderTemp</code></td>
         <td align=center><code>number</code></td>
         <td align=center><code>12</code></td>
         <td>Order of CPU Temp</td>
