@@ -3,7 +3,7 @@ A [MagicMirror²](https://magicmirror.builders/) module that can display device 
 
 ## Screenshot
 
-Loading
+![alt Screenshot](https://github.com/SalekurPolas/MMM-Pinfo/blob/master/res/img.png?raw=true)
 
 ## Dependencies
 
