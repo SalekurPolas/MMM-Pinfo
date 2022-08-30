@@ -126,12 +126,12 @@ Module.register('MMM-Pinfo', {
 
     suspend: function() {
         this.hidden = true;
-        console.log("[ " + this.name + " ] " + " is suspended.");
+        Log.log("[ " + this.name + " ] " + " is suspended.");
     },
 
     resume: function() {
         this.hidden = false;
-        console.log("[ " + this.name + " ] " + " is resumed.");
+        Log.log("[ " + this.name + " ] " + " is resumed.");
     },
 
 	getStyles: function () {
