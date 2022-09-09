@@ -2,7 +2,7 @@
 
 Module.register('MMM-Pinfo', {
     defaults: {
-		debug: true,
+        debug: true,
         refresh: 5000,
         itemAlign: 'left',
         labelAlign: 'left',
@@ -11,59 +11,59 @@ Module.register('MMM-Pinfo', {
         containerSize: null,
         header: 'Mirror Information',
 
-		DEVICE: {
-			labelModel: "Model",
-			displayModel: true,
-			orderModel: 1,
+	DEVICE: {
+		labelModel: "Model",
+		displayModel: true,
+		orderModel: 1,
 
-			labelSerial: 'Serial',
-			displaySerial: true,
-			orderSerial: 2
+		labelSerial: 'Serial',
+		displaySerial: true,
+		orderSerial: 2
 		},
         OS: {
-			labelOs: 'OS',
-            displayOs: false,
-            orderOs: 3
+		labelOs: 'OS',
+		displayOs: false,
+		orderOs: 3
         },
         NETWORK: {
-			labelType: 'NET Type',
-			displayType: false,
-			orderType: 4,
+		labelType: 'NET Type',
+		displayType: false,
+		orderType: 4,
 
-			labelIPv4: 'IPv4',
-			displayIPv4: true,
-			orderIPv4: 5,
+		labelIPv4: 'IPv4',
+		displayIPv4: true,
+		orderIPv4: 5,
 
-			labelIPv6: 'IPv6',
-			displayIPv6: false,
-			orderIPv6: 6,
+		labelIPv6: 'IPv6',
+		displayIPv6: false,
+		orderIPv6: 6,
 
-			labelMac: 'MAC',
-			displayMac: false,
-			orderMac: 7
+		labelMac: 'MAC',
+		displayMac: false,
+		orderMac: 7
         },
         RAM: {
-			labelRam: 'RAM',
+		labelRam: 'RAM',
             displayRam: true,
             orderRam: 8
         },
         STORAGE: {
-			labelStorage: 'Storage',
+		labelStorage: 'Storage',
             displayStorage: true,
             orderStorage: 9,
         },
         CPU: {
-			labelType: 'CPU Type',
-			displayType: false,
-			orderType: 10,
+		labelType: 'CPU Type',
+		displayType: false,
+		orderType: 10,
 
-			labelUsage: 'CPU Usage',
-            displayUsage: false,
-            orderUsage: 11,
+		labelUsage: 'CPU Usage',
+		displayUsage: false,
+		orderUsage: 11,
 
-			labelTemp: 'CPU Temp',
-            displayTemp: true,
-            orderTemp: 12
+		labelTemp: 'CPU Temp',
+		displayTemp: true,
+		orderTemp: 12
         },
         WARNING: {
             enable: false,
@@ -82,16 +82,16 @@ Module.register('MMM-Pinfo', {
 		this.container = 0;
         
         this.status = {
-			DEVICE: {
-				model: 'Loading...',
-				serial: 'Loading...'
+	    DEVICE: {
+		model: 'Loading...',
+		serial: 'Loading...'
 			},
             OS: 'Loading...',
             NETWORK: {
-				type: 'Loading...',
-				ipv4: 'Loading...',
-				ipv6: 'Loading...',
-				mac: 'Loading...'
+		type: 'Loading...',
+		ipv4: 'Loading...',
+		ipv6: 'Loading...',
+		mac: 'Loading...'
 			},
             MEMORY: {
                 total: 0,
@@ -126,12 +126,12 @@ Module.register('MMM-Pinfo', {
 
     suspend: function() {
         this.hidden = true;
-        console.log("[ " + this.name + " ] " + " is suspended.");
+        Log.log("[ " + this.name + " ] " + " is suspended.");
     },
 
     resume: function() {
         this.hidden = false;
-        console.log("[ " + this.name + " ] " + " is resumed.");
+        Log.log("[ " + this.name + " ] " + " is resumed.");
     },
 
 	getStyles: function () {
@@ -154,9 +154,9 @@ Module.register('MMM-Pinfo', {
 		var wrapper = document.createElement("div");
         wrapper.className = "Pinfo";
 
-		if (this.config.DEVICE.displayModel) wrapper.appendChild(this.getDomDeviceModel());
-		if (this.config.DEVICE.displaySerial) wrapper.appendChild(this.getDomDeviceSerial());
-		if (this.config.OS.displayOs) wrapper.appendChild(this.getDomOS());
+        if (this.config.DEVICE.displayModel) wrapper.appendChild(this.getDomDeviceModel());
+        if (this.config.DEVICE.displaySerial) wrapper.appendChild(this.getDomDeviceSerial());
+        if (this.config.OS.displayOs) wrapper.appendChild(this.getDomOS());
         if (this.config.NETWORK.displayType) wrapper.appendChild(this.getDomNetworkType());
         if (this.config.NETWORK.displayIPv4) wrapper.appendChild(this.getDomNetworkIPv4());
         if (this.config.NETWORK.displayIPv6) wrapper.appendChild(this.getDomNetworkIPv6());
@@ -190,7 +190,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['DEVICE'].model;
         value.style.textAlign = this.config.valueAlign;
 
-		if (this.config.DEVICE.labelModel.length > this.item) this.item = this.config.DEVICE.labelModel.length;
+        if (this.config.DEVICE.labelModel.length > this.item) this.item = this.config.DEVICE.labelModel.length;
         if (this.status['DEVICE'].model.length > this.container) this.container = this.status['DEVICE'].model.length;
 
         container.appendChild(value);
@@ -220,7 +220,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['DEVICE'].serial;
         value.style.textAlign = this.config.valueAlign;
 
-		if (this.config.DEVICE.labelSerial.length > this.item) this.item = this.config.DEVICE.labelSerial.length;
+        if (this.config.DEVICE.labelSerial.length > this.item) this.item = this.config.DEVICE.labelSerial.length;
         if (this.status['DEVICE'].serial.length > this.container) this.container = this.status['DEVICE'].serial.length;
 
         container.appendChild(value);
@@ -250,7 +250,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['OS'];
         value.style.textAlign = this.config.valueAlign;
 
-		if (this.config.OS.labelOs.length > this.item) this.item = this.config.OS.labelOs.length;
+        if (this.config.OS.labelOs.length > this.item) this.item = this.config.OS.labelOs.length;
         if (this.status['OS'].length > this.container) this.container = this.status['OS'].length;
 
         container.appendChild(value);
@@ -280,7 +280,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['NETWORK'].type;
         value.style.textAlign = this.config.valueAlign;
 
-		if (this.config.NETWORK.labelType.length > this.item) this.item = this.config.NETWORK.labelType.length;
+        if (this.config.NETWORK.labelType.length > this.item) this.item = this.config.NETWORK.labelType.length;
         if (this.status['NETWORK'].type.length > this.container) this.container = this.status['NETWORK'].type.length;
 
         container.appendChild(value);
@@ -310,7 +310,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['NETWORK'].ipv4;
         value.style.textAlign = this.config.valueAlign;
 
-		if (this.config.NETWORK.labelIPv4.length > this.item) this.item = this.config.NETWORK.labelIPv4.length;
+        if (this.config.NETWORK.labelIPv4.length > this.item) this.item = this.config.NETWORK.labelIPv4.length;
         if (this.status['NETWORK'].ipv4.length > this.container) this.container = this.status['NETWORK'].ipv4.length;
 
         container.appendChild(value);
@@ -340,7 +340,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['NETWORK'].ipv6;
         value.style.textAlign = this.config.valueAlign;
 
-		if (this.config.NETWORK.labelIPv6.length > this.item) this.item = this.config.NETWORK.labelIPv6.length;
+        if (this.config.NETWORK.labelIPv6.length > this.item) this.item = this.config.NETWORK.labelIPv6.length;
         if (this.status['NETWORK'].ipv6.length > this.container) this.container = this.status['NETWORK'].ipv6.length;
 
         container.appendChild(value);
@@ -370,7 +370,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['NETWORK'].mac;
         value.style.textAlign = this.config.valueAlign;
 
-		if (this.config.NETWORK.labelMac.length > this.item) this.item = this.config.NETWORK.labelMac.length;
+        if (this.config.NETWORK.labelMac.length > this.item) this.item = this.config.NETWORK.labelMac.length;
         if (this.status['NETWORK'].mac.length > this.container) this.container = this.status['NETWORK'].mac.length;
 
         container.appendChild(value);
@@ -400,7 +400,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['CPU'].type;
         value.style.textAlign = this.config.valueAlign;
 
-		if (this.config.CPU.labelType.length > this.item) this.item = this.config.CPU.labelType.length;
+        if (this.config.CPU.labelType.length > this.item) this.item = this.config.CPU.labelType.length;
         if (this.status['CPU'].type.length > this.container) this.container = this.status['CPU'].type.length;
 
         container.appendChild(value);
@@ -437,7 +437,7 @@ Module.register('MMM-Pinfo', {
         step > 100 ? step = 100 : step = step;
         used.className = "bar step" + step;
 
-		if (this.config.CPU.labelTemp.length > this.item) this.item = this.config.CPU.labelTemp.length;
+        if (this.config.CPU.labelTemp.length > this.item) this.item = this.config.CPU.labelTemp.length;
 
         total.appendChild(used);
         container.appendChild(total);
@@ -606,9 +606,9 @@ Module.register('MMM-Pinfo', {
             this.status = payload;
             this.checkWarning();
 			
-			this.config.containerSize ? this.containerSize = this.config.containerSize : this.containerSize = (this.container * 7) + 10;
-			this.config.labelSize ? this.labelSize = this.config.labelSize : this.labelSize = (this.item * 7) + 10;
-            this.updateDom();
+        this.config.containerSize ? this.containerSize = this.config.containerSize : this.containerSize = (this.container * 7) + 10;
+        this.config.labelSize ? this.labelSize = this.config.labelSize : this.labelSize = (this.item * 7) + 10;
+        this.updateDom();
         }
     },
 });
