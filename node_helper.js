@@ -69,7 +69,7 @@ module.exports = NodeHelper.create({
         await this.collectDynamicInfo(resolve => {
             this.sendSocketNotification('STATUS', this.status);
         });
-        
+
         this.timer = setTimeout(() => {
             this.scheduler();
         }, this.config.refresh);
@@ -86,6 +86,10 @@ module.exports = NodeHelper.create({
     getDeviceInfo: function() {
         return new Promise((resolve) => {
             var ModelInfo = this.DeviceInfo[this.DeviceInfo.length - 2].split(":");
+            if (!ModelInfo[1]) {
+                resolve();
+                return;
+            }
             var model = ModelInfo[1].slice(1).split(' ');
             delete model[model.length-1];
             delete model[model.length-2];
@@ -182,13 +186,13 @@ module.exports = NodeHelper.create({
             resolve();
         })
     },
-    
+
     convert: function(octet, FixTo) {
         octet = Math.abs(parseInt(octet, 10));
         var def = [
             [1, 'B'],
-            [1024, 'KB'], 
-            [1024*1024, 'MB'], 
+            [1024, 'KB'],
+            [1024*1024, 'MB'],
             [1024*1024*1024, 'GB'],
             [1024*1024*1024*1024, 'TB']];
 

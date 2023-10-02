@@ -1,5 +1,5 @@
 # MMM-Pinfo
-A [MagicMirror²](https://magicmirror.builders/) module that can display device information. This module is mainly inspired by [MMM-Tools](https://github.com/bugsounet/MMM-Tools). To develop this module I used Node.js. Also, MagicMirror users can set warnings for abnormal information. MagicMirror will send a notification if any information exceeds the standard value. 
+A [MagicMirror²](https://magicmirror.builders/) module that can display device information. This module is mainly inspired by [MMM-Tools](https://github.com/bugsounet/MMM-Tools). To develop this module I used Node.js. Also, MagicMirror users can set warnings for abnormal information. MagicMirror will send a notification if any information exceeds the standard value.
 
 ## Screenshot
 
@@ -18,14 +18,14 @@ Although dependencies will automatically install during installation on MagicMir
 
 ```sh
 cd ~/MagicMirror
-npm i async
+npm i async@3.2.4
 ```
 
 ### systeminformation
 
 ```sh
 cd ~/MagicMirror
-npm i systeminformation
+npm i systeminformation@5.16.9
 ```
 
 ## Compatibility
@@ -34,8 +34,8 @@ I have tested the following dependency versions. Let me know if the module works
 
 | Dependency        | Versions |
 | ----------------- | -------- |
-| async             | 3.2.0    |
-| systeminformation | 5.6.7    |
+| async             | 3.2.4    |
+| systeminformation | 5.16.9   |
 
 ## Install the Module
 
@@ -63,7 +63,7 @@ npm install
 | RAM             | Display total size, usage, and percentage usage of the RAM
 | Storage         | Display total size, usage, and percentage usage of the Storage
 | CPU type        | Display CPU type of the device
-| CPU usage       | Display the percentage of usage 
+| CPU usage       | Display the percentage of usage
 | CPU temp        | Display current temperature of the CPU
 
 ### Module Usage
