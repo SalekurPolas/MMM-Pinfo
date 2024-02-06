@@ -4,7 +4,7 @@ A [MagicMirror²](https://magicmirror.builders/) module that can display device 
 
 ## Screenshot
 
-![Screenshot](res/img.png?raw=true)
+![Screenshot](res/img.png)
 
 ## Dependencies
 
