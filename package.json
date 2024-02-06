@@ -1,6 +1,6 @@
 {
   "name": "mmm-pinfo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An informational module for MagicMirror².",
   "main": "MMM-Pinfo.js",
   "repository": {
