@@ -452,7 +452,7 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
 ## Issues
 
 - Support for multiple language is not yet complete.
-- If if have any other issues then let me know at [Issues](https://github.com/SalekurPolas/MMM-Pinfo/issues)
+- If if have any other issues then let me know at [Issues](https://github.com/SalekurPolas/MMM-Pinfo/issues).
 
 ## Credits
 
