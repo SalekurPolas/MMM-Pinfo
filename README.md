@@ -482,5 +482,5 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
 
 ## Credits
 
-- Michael Teeuw for the awesome invention [MagicMirror²](https://github.com/MichMich/MagicMirror)
+- Michael Teeuw for the awesome invention [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror)
 - Bugsounet Cédricfor the original module [MMM-Tools](https://github.com/bugsounet/MMM-Tools)
