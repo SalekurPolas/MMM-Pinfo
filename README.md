@@ -48,6 +48,15 @@ cd MMM-Pinfo
 npm install
 ```
 
+
+## Updating
+
+```
+cd ~/MagicMirror/modules/MMM-Pinfo
+git pull
+npm install
+```
+
 ## Usage
 
 `MMM-Pinfo` module can display the following information
@@ -482,5 +491,5 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
 
 ## Credits
 
-- Michael Teeuw for the awesome invention [MagicMirror²](https://github.com/MichMich/MagicMirror)
+- Michael Teeuw for the awesome invention [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror)
 - Bugsounet Cédricfor the original module [MMM-Tools](https://github.com/bugsounet/MMM-Tools)
