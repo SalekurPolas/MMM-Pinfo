@@ -48,6 +48,15 @@ cd MMM-Pinfo
 npm install
 ```
 
+
+## Updating
+
+```
+cd ~/MagicMirror/modules/MMM-Pinfo
+git pull
+npm install
+```
+
 ## Usage
 
 `MMM-Pinfo` module can display the following information
