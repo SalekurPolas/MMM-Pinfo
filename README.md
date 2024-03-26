@@ -22,6 +22,23 @@ cd MMM-Pinfo
 npm install
 ```
 
+### Manual Installation
+
+Although dependencies will automatically install during installation on MagicMirror, you can manually install them by the following steps.
+
+1. async
+
+```sh
+cd ~/MagicMirror/MMM-Pinfo
+npm install async
+```
+
+2. systeminformation
+
+```sh
+cd ~/MagicMirror/MMM-Pinfo
+npm install systeminformation
+```
 
 ## Updating
 
