@@ -1,53 +1,44 @@
 # MMM-Pinfo
+
 A [MagicMirror²](https://magicmirror.builders/) module that can display device information. This module is mainly inspired by [MMM-Tools](https://github.com/bugsounet/MMM-Tools). To develop this module I used Node.js. Also, MagicMirror users can set warnings for abnormal information. MagicMirror will send a notification if any information exceeds the standard value.
 
 ## Screenshot
 
-![alt Screenshot](https://github.com/SalekurPolas/MMM-Pinfo/blob/master/res/img.png?raw=true)
+![Screenshot](res/img.png)
 
 ## Dependencies
 
-- [async 3.2.0](https://www.npmjs.com/package/async)
-- [systeminformation 5.6.7](https://www.npmjs.com/package/systeminformation)
+- [async](https://www.npmjs.com/package/async)
+- [systeminformation](https://www.npmjs.com/package/systeminformation)
 
 ## Installation
-
-Although dependencies will automatically install during installation on MagicMirror, you can manually install them by the following step.
-
-### async
-
-```sh
-cd ~/MagicMirror
-npm i async@3.2.4
-```
-
-### systeminformation
-
-```sh
-cd ~/MagicMirror
-npm i systeminformation@5.16.9
-```
-
-## Compatibility
-
-I have tested the following dependency versions. Let me know if the module works with another version so I can extend this list.
-
-| Dependency        | Versions |
-| ----------------- | -------- |
-| async             | 3.2.4    |
-| systeminformation | 5.16.9   |
-
-## Install the Module
 
 Get the module directly from GitHub and install to MagicMirror using the following commands.
 
 ```sh
 cd ~/MagicMirror/modules/
-git clone https://github.com/SalekurPolas/MMM-Pinfo.git
+git clone https://github.com/SalekurPolas/MMM-Pinfo
 cd MMM-Pinfo
 npm install
 ```
 
+### Manual Installation
+
+Although dependencies will automatically install during installation on MagicMirror, you can manually install them by the following steps.
+
+1. async
+
+```sh
+cd ~/MagicMirror/MMM-Pinfo
+npm install async
+```
+
+2. systeminformation
+
+```sh
+cd ~/MagicMirror/MMM-Pinfo
+npm install systeminformation
+```
 
 ## Updating
 
@@ -487,9 +478,9 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
 ## Issues
 
 - Support for multiple language is not yet complete.
-- If if have any other issues then let me know at [Issues](https://github.com/SalekurPolas/MMM-Pinfo/issues)
+- If if have any other issues then let me know at [Issues](https://github.com/SalekurPolas/MMM-Pinfo/issues).
 
 ## Credits
 
-- Michael Teeuw for the awesome invention [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror)
-- Bugsounet Cédricfor the original module [MMM-Tools](https://github.com/bugsounet/MMM-Tools)
+- Michael Teeuw for the awesome invention [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror).
+- Bugsounet Cédricfor the original module [MMM-Tools](https://github.com/bugsounet/MMM-Tools).

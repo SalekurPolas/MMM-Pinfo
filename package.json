@@ -1,7 +1,7 @@
 {
   "name": "mmm-pinfo",
-  "version": "1.0.0",
-  "description": "An informational module for MagicMirror",
+  "version": "1.0.1",
+  "description": "An informational module for MagicMirror².",
   "main": "MMM-Pinfo.js",
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/SalekurPolas/MMM-Pinfo#readme",
   "dependencies": {
-    "async": "^3.2.0",
-    "systeminformation": "^5.6.7"
+    "async": "^3.2.5",
+    "systeminformation": "^5.21.24"
   }
 }
