@@ -585,7 +585,7 @@ Module.register('MMM-Pinfo', {
         this.sendNotification("SHOW_ALERT", {
             type: "notification", 
             title: this.name + " WARNING", 
-            message: name + " value " + value + " excedded than " + check
+            message: name + " value " + value + " exceeds " + check
         });
     },
 
