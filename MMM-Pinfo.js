@@ -112,7 +112,8 @@ Module.register('MMM-Pinfo', {
                 type: 'Loading...',
                 usage: 0,
                 temp: 0
-            }
+            },
+          UPTIME: 'Loading...',
         }
 
         this.config = merge({}, this.defaults, this.config);
