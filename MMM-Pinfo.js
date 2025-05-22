@@ -438,7 +438,6 @@ Module.register('MMM-Pinfo', {
         used.style.opacity = 0.75;
         used.style.width = this.status['CPU'].temp + "%";
 
-
         var step = this.getLevel(this.status['CPU'].temp, -1);
         step > 100 ? step = 100 : step = step;
         used.className = "bar step" + step;
