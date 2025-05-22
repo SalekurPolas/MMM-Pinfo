@@ -424,14 +424,20 @@ Module.register('MMM-Pinfo', {
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
-        
+
         var total = document.createElement("div");
         total.className = "total";
-        total.innerHTML = this.status['CPU'].temp + '\°C';
+        if (config.units === 'imperial') {
+          total.innerHTML = Math.round(this.status['CPU'].temp * 9/5 + 32, 0) + '\°F';
+        }
+        else {
+          total.innerHTML = this.status['CPU'].temp + '\°C';
+        }
 
         var used = document.createElement("div");
         used.style.opacity = 0.75;
         used.style.width = this.status['CPU'].temp + "%";
+
 
         var step = this.getLevel(this.status['CPU'].temp, -1);
         step > 100 ? step = 100 : step = step;
