@@ -12,32 +12,33 @@ module.exports = NodeHelper.create({
         this.timer = null;
 
         this.status = {
-			DEVICE: {
-				model: 'unknow',
-				serial: 'unknown'
-			},
-            OS: 'unknown',
-            NETWORK: {
-                type: 'unknown',
-				ipv4: 'unknown',
-				ipv6: 'unknown',
-				mac: 'unknown'
-			},
-            MEMORY: {
-                total: 0,
-                used: 0,
-                percent: 0
-            },
-            STORAGE: {
-                total: 0,
-                used: 0,
-                percent: 0
-            },
-            CPU: {
-                type: 'unknown',
-                usage: 0,
-                temp: 0
-            }
+          DEVICE: {
+            model: 'unknown',
+            serial: 'unknown'
+          },
+          OS: 'unknown',
+          NETWORK: {
+            type: 'unknown',
+            ipv4: 'unknown',
+            ipv6: 'unknown',
+            mac: 'unknown'
+          },
+          MEMORY: {
+            total: 0,
+            used: 0,
+            percent: 0
+          },
+          STORAGE: {
+            total: 0,
+            used: 0,
+            percent: 0
+          },
+          CPU: {
+            type: 'unknown',
+            usage: 0,
+            temp: 0
+          },
+          UPTIME: 'unknown'
         }
 
         this.network = os.networkInterfaces();
@@ -80,7 +81,12 @@ module.exports = NodeHelper.create({
         await this.getMemoryInfo();
         await this.getStorageInfo();
         await this.getCPUInfo();
+        await this.getUptime();
         resolve();
+    },
+
+    getUptime: function() {
+      this.status['UPTIME'] = this.convertTime(si.time().uptime)
     },
 
     getDeviceInfo: function() {
@@ -204,6 +210,22 @@ module.exports = NodeHelper.create({
         for(var i = 0; i < def.length; i++){
             if(octet < def[i][0]) return (octet / def[i-1][0]).toFixed(FixTo) + def[i - 1][1];
         }
+    },
+
+    convertTime: function(seconds) {
+      if (seconds > 60*60*24) {
+        var humanTime = Math.round(seconds/(60*60*24), 0) + ' days'
+      }
+      else if (seconds > 60*60) {
+        humanTime = Math.round(seconds/(60*60), 0) + ' hours'
+      }
+      else if (seconds > 60) {
+        humanTime = Math.round(seconds/60, 0) + ' minutes'
+      }
+      else {
+        humanTime = Math.round(seconds, 0) + ' seconds'
+      }
+      return humanTime
     },
 
 });

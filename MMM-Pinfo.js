@@ -2,7 +2,7 @@
 
 Module.register('MMM-Pinfo', {
     defaults: {
-        debug: true,
+        debug: false,
         refresh: 5000,
         itemAlign: 'left',
         labelAlign: 'left',
@@ -52,19 +52,24 @@ Module.register('MMM-Pinfo', {
             displayStorage: true,
             orderStorage: 9,
         },
-        CPU: {
-		labelType: 'CPU Type',
-		displayType: false,
-		orderType: 10,
+    CPU: {
+      labelType: 'CPU Type',
+      displayType: false,
+      orderType: 10,
 
-		labelUsage: 'CPU Usage',
-		displayUsage: false,
-		orderUsage: 11,
+      labelUsage: 'CPU Usage',
+      displayUsage: false,
+      orderUsage: 11,
 
-		labelTemp: 'CPU Temp',
-		displayTemp: true,
-		orderTemp: 12
-        },
+      labelTemp: 'CPU Temp',
+      displayTemp: true,
+      orderTemp: 12
+    },
+    UPTIME: {
+      labelUptime: 'Uptime',
+      displayUptime: false,
+      orderUptime: 13,
+    },
         WARNING: {
             enable: false,
             interval: 1000 * 60 * 5,
@@ -166,6 +171,7 @@ Module.register('MMM-Pinfo', {
         if (this.config.CPU.displayType) wrapper.appendChild(this.getDomCPUType());
         if (this.config.CPU.displayUsage) wrapper.appendChild(this.getDomCPUUsage());
         if (this.config.CPU.displayTemp) wrapper.appendChild(this.getDomCPUTemp());
+        if (this.config.UPTIME.displayUptime) wrapper.appendChild(this.getDomUptime());
         return wrapper;
 	},
 	
@@ -407,6 +413,36 @@ Module.register('MMM-Pinfo', {
         wrapper.appendChild(label);
         wrapper.appendChild(container);
         return wrapper;
+    },
+
+    getDomUptime : function() {
+      var wrapper = document.createElement("div");
+      wrapper.className = "item";
+      wrapper.style.justifyContent = this.config.itemAlign;
+      wrapper.style.order = this.config.UPTIME.orderUptime;
+      
+      var label = document.createElement("div");
+      label.className = "label";
+      label.style.width = this.labelSize + "px";
+      label.style.textAlign = this.config.labelAlign;
+      label.innerHTML = this.config.UPTIME.labelUptime;
+		
+        var container = document.createElement("div");
+        container.className = "container";
+        container.style.width = this.containerSize + "px";
+
+        var value = document.createElement("div");
+        value.className = "value";
+        value.innerHTML = this.status['UPTIME'];
+        value.style.textAlign = this.config.valueAlign;
+
+        if (this.config.UPTIME.labelUptime.length > this.item) this.item = this.config.UPTIME.labelUptime.length;
+        if (this.status['UPTIME'].length > this.container) this.container = this.status['UPTIME'].length;
+
+        container.appendChild(value);
+        wrapper.appendChild(label);
+        wrapper.appendChild(container);
+      return wrapper;
     },
 
     getDomCPUTemp : function() {

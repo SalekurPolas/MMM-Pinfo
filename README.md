@@ -65,6 +65,7 @@ npm install
 | CPU type        | Display CPU type of the device
 | CPU usage       | Display the percentage of usage
 | CPU temp        | Display current temperature of the CPU
+| System uptime   | Display the uptime of the system
 
 ### Module Usage
 
@@ -347,6 +348,23 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
         <td align=center><code>12</code></td>
         <td>Order of CPU Temp</td>
       </tr>
+      <td><code>UPTIME.labelUptime</code></td>
+        <td align=center><code>string</code></td>
+        <td align=center><code>'Uptime'</code></td>
+        <td>Label of Uptime</td>
+      </tr>
+      <tr>
+        <td><code>UPTIME.displayUptime</code></td>
+        <td align=center><code>boolean</code></td>
+        <td align=center><code>false</code></td>
+        <td>Display Uptime</td>
+      </tr>
+      <tr>
+        <td><code>UPTIME.orderUptime</code></td>
+        <td align=center><code>number</code></td>
+        <td align=center><code>13</code></td>
+        <td>Order of Uptime</td>
+      </tr>
       <tr>
         <td><code>WARNING.enable</code></td>
         <td align=center><code>boolean</code></td>
@@ -459,6 +477,11 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
       labelTemp: 'CPU Temp',
       displayTemp: true,
       orderTemp: 12
+    },
+   CPU: {
+      labelUptime: 'Uptime',
+      displayUptime: false,
+      orderUptime: 13
     },
 
     WARNING: {
