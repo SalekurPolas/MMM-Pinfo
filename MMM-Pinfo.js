@@ -141,7 +141,7 @@ Module.register('MMM-Pinfo', {
     },
 
 	getStyles: function () {
-		return [this.file('res/app.css')];
+		return [this.file('MMM-Pinfo.css')];
 	},
 
 	getScripts: function() {
