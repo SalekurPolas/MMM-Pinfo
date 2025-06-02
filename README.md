@@ -34,7 +34,7 @@ npm install systeminformation
 
 ## Updating
 
-```
+```sh
 cd ~/MagicMirror/modules/MMM-Pinfo
 git pull
 npm install
@@ -64,10 +64,10 @@ npm install
 To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `config.js` file in the `MagicMirror/config` directory.
 
 ```js
-{
-  module: 'MMM-Pinfo',
-  position: 'top_left'
-}
+    {
+      module: 'MMM-Pinfo',
+      position: 'top_left'
+    },
 ```
 
 ## Configuration
