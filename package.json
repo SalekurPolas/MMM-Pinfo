@@ -20,6 +20,6 @@
   },
   "homepage": "https://github.com/SalekurPolas/MMM-Pinfo#readme",
   "dependencies": {
-    "systeminformation": "^5.25.11"
+    "systeminformation": "^5.27.1"
   }
 }
