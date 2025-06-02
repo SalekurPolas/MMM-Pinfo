@@ -116,7 +116,7 @@ Module.register('MMM-Pinfo', {
           UPTIME: 'Loading...',
         }
 
-        this.config = merge({}, this.defaults, this.config);
+        this.config = { ...this.defaults, ...this.config };
 
         if(this.data.position === 'top_left' || this.data.position === 'bottom_left') {
             this.config.itemAlign = 'flex-start';
@@ -145,7 +145,7 @@ Module.register('MMM-Pinfo', {
 	},
 
 	getScripts: function() {
-		return	['moment.js', this.file('res/merge.js')];
+		return	['moment.js'];
 	},
 
 	getHeader: function() {
