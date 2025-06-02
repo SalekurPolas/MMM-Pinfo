@@ -11,44 +11,44 @@ Module.register('MMM-Pinfo', {
         containerSize: null,
         header: 'Mirror Information',
 
-	DEVICE: {
-		labelModel: "Model",
-		displayModel: true,
-		orderModel: 1,
+    DEVICE: {
+        labelModel: "Model",
+        displayModel: true,
+        orderModel: 1,
 
-		labelSerial: 'Serial',
-		displaySerial: true,
-		orderSerial: 2
-		},
+        labelSerial: 'Serial',
+        displaySerial: true,
+        orderSerial: 2
+        },
         OS: {
-		labelOs: 'OS',
-		displayOs: false,
-		orderOs: 3
+        labelOs: 'OS',
+        displayOs: false,
+        orderOs: 3
         },
         NETWORK: {
-		labelType: 'NET Type',
-		displayType: false,
-		orderType: 4,
+        labelType: 'NET Type',
+        displayType: false,
+        orderType: 4,
 
-		labelIPv4: 'IPv4',
-		displayIPv4: true,
-		orderIPv4: 5,
+        labelIPv4: 'IPv4',
+        displayIPv4: true,
+        orderIPv4: 5,
 
-		labelIPv6: 'IPv6',
-		displayIPv6: false,
-		orderIPv6: 6,
+        labelIPv6: 'IPv6',
+        displayIPv6: false,
+        orderIPv6: 6,
 
-		labelMac: 'MAC',
-		displayMac: false,
-		orderMac: 7
+        labelMac: 'MAC',
+        displayMac: false,
+        orderMac: 7
         },
         RAM: {
-		labelRam: 'RAM',
+        labelRam: 'RAM',
             displayRam: true,
             orderRam: 8
         },
         STORAGE: {
-		labelStorage: 'Storage',
+        labelStorage: 'Storage',
             displayStorage: true,
             orderStorage: 9,
         },
@@ -84,20 +84,20 @@ Module.register('MMM-Pinfo', {
 
     start: function() {
         this.item = 0;
-		this.container = 0;
+        this.container = 0;
         
         this.status = {
-	    DEVICE: {
-		model: 'Loading...',
-		serial: 'Loading...'
-			},
+        DEVICE: {
+        model: 'Loading...',
+        serial: 'Loading...'
+            },
             OS: 'Loading...',
             NETWORK: {
-		type: 'Loading...',
-		ipv4: 'Loading...',
-		ipv6: 'Loading...',
-		mac: 'Loading...'
-			},
+        type: 'Loading...',
+        ipv4: 'Loading...',
+        ipv6: 'Loading...',
+        mac: 'Loading...'
+            },
             MEMORY: {
                 total: 0,
                 used: 0,
@@ -140,24 +140,24 @@ Module.register('MMM-Pinfo', {
         Log.log("[ " + this.name + " ] " + " is resumed.");
     },
 
-	getStyles: function () {
-		return [this.file('MMM-Pinfo.css')];
-	},
+    getStyles: function () {
+        return [this.file('MMM-Pinfo.css')];
+    },
 
-	getScripts: function() {
-		return	['moment.js'];
-	},
+    getScripts: function() {
+        return    ['moment.js'];
+    },
 
-	getHeader: function() {
+    getHeader: function() {
         if(this.config.header) {
             return this.data.header ? this.data.header : this.config.header;
         } else {
             return null;
         }
-	},
+    },
 
-	getDom: function() {
-		var wrapper = document.createElement("div");
+    getDom: function() {
+        var wrapper = document.createElement("div");
         wrapper.className = "Pinfo";
 
         if (this.config.DEVICE.displayModel) wrapper.appendChild(this.getDomDeviceModel());
@@ -174,8 +174,8 @@ Module.register('MMM-Pinfo', {
         if (this.config.CPU.displayTemp) wrapper.appendChild(this.getDomCPUTemp());
         if (this.config.UPTIME.displayUptime) wrapper.appendChild(this.getDomUptime());
         return wrapper;
-	},
-	
+    },
+    
     getDomDeviceModel: function() {
         var wrapper = document.createElement("div");
         wrapper.className = "item";
@@ -214,10 +214,10 @@ Module.register('MMM-Pinfo', {
 
         var label = document.createElement("div");
         label.className = "label";
-		label.style.width = this.labelSize + "px";
+        label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.DEVICE.labelSerial;
-		
+        
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -244,10 +244,10 @@ Module.register('MMM-Pinfo', {
 
         var label = document.createElement("div");
         label.className = "label";
-		label.style.width = this.labelSize + "px";
+        label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.OS.labelOs;
-		
+        
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -266,7 +266,7 @@ Module.register('MMM-Pinfo', {
         return wrapper;
     },
 
-	getDomNetworkType: function() {
+    getDomNetworkType: function() {
         var wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
@@ -274,10 +274,10 @@ Module.register('MMM-Pinfo', {
 
         var label = document.createElement("div");
         label.className = "label";
-		label.style.width = this.labelSize + "px";
+        label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelType;
-		
+        
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -294,7 +294,7 @@ Module.register('MMM-Pinfo', {
         wrapper.appendChild(label);
         wrapper.appendChild(container);
         return wrapper;
-	},
+    },
 
     getDomNetworkIPv4: function() {
         var wrapper = document.createElement("div");
@@ -304,10 +304,10 @@ Module.register('MMM-Pinfo', {
 
         var label = document.createElement("div");
         label.className = "label";
-		label.style.width = this.labelSize + "px";
+        label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelIPv4;
-		
+        
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -334,10 +334,10 @@ Module.register('MMM-Pinfo', {
 
         var label = document.createElement("div");
         label.className = "label";
-		label.style.width = this.labelSize + "px";
+        label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelIPv6;
-		
+        
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -364,10 +364,10 @@ Module.register('MMM-Pinfo', {
 
         var label = document.createElement("div");
         label.className = "label";
-		label.style.width = this.labelSize + "px";
+        label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelMac;
-		
+        
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -394,10 +394,10 @@ Module.register('MMM-Pinfo', {
 
         var label = document.createElement("div");
         label.className = "label";
-		label.style.width = this.labelSize + "px";
+        label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.CPU.labelType;
-		
+        
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -427,7 +427,7 @@ Module.register('MMM-Pinfo', {
       label.style.width = this.labelSize + "px";
       label.style.textAlign = this.config.labelAlign;
       label.innerHTML = this.config.UPTIME.labelUptime;
-		
+        
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -639,7 +639,7 @@ Module.register('MMM-Pinfo', {
 
     notificationReceived: function(notification, payload, sender) {
         if (notification === 'DOM_OBJECTS_CREATED') {
-			//.....
+            //.....
         }
     },
 
@@ -647,7 +647,7 @@ Module.register('MMM-Pinfo', {
         if (notification === "STATUS") {
             this.status = payload;
             this.checkWarning();
-			
+            
         this.config.containerSize ? this.containerSize = this.config.containerSize : this.containerSize = (this.container * 7) + 10;
         this.config.labelSize ? this.labelSize = this.config.labelSize : this.labelSize = (this.item * 7) + 10;
         this.updateDom();
