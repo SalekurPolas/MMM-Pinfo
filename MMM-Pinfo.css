@@ -1,0 +1,98 @@
+.Pinfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  font-size: initial;
+  line-height: 1em;
+  color: #eee;
+}
+
+.Pinfo .item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 1.2em;
+}
+
+.Pinfo .item .label {
+  order: 1;
+  text-align: start;
+  padding-right: 15px;
+  color: #bdf;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.Pinfo .item .container {
+  order: 2;
+  height: 100%;
+  margin-top: 0px;
+}
+
+.Pinfo .item .container .value {
+  /* overflow: hidden; */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.Pinfo .total {
+  text-align: right;
+  background-color: #333;
+  position: relative;
+  width: 100%;
+}
+
+.Pinfo .bar {
+  text-align: left;
+  position: absolute;
+  top: 0;
+  background-color: #369;
+  overflow: visible;
+  height: 100%;
+}
+
+.Pinfo .bar.step0 {
+  background-color: #33c;
+}
+
+.Pinfo .bar.step10 {
+  background-color: #43b;
+}
+
+.Pinfo .bar.step20 {
+  background-color: #53a;
+}
+
+.Pinfo .bar.step30 {
+  background-color: #639;
+}
+
+.Pinfo .bar.step40 {
+  background-color: #738;
+}
+
+.Pinfo .bar.step50 {
+  background-color: #837;
+}
+
+.Pinfo .bar.step60 {
+  background-color: #936;
+}
+
+.Pinfo .bar.step70 {
+  background-color: #a35;
+}
+
+.Pinfo .bar.step80 {
+  background-color: #b34;
+}
+
+.Pinfo .bar.step90 {
+  background-color: #c33;
+}
+
+.Pinfo .bar.step100 {
+  background-color: #d32;
+}

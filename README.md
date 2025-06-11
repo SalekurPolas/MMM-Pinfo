@@ -4,11 +4,10 @@ A [MagicMirror²](https://magicmirror.builders/) module that can display device 
 
 ## Screenshot
 
-![Screenshot](res/img.png)
+![Screenshot](screenshot.png)
 
 ## Dependencies
 
-- [async](https://www.npmjs.com/package/async)
 - [systeminformation](https://www.npmjs.com/package/systeminformation)
 
 ## Installation
@@ -26,14 +25,7 @@ npm install
 
 Although dependencies will automatically install during installation on MagicMirror, you can manually install them by the following steps.
 
-1. async
-
-```sh
-cd ~/MagicMirror/MMM-Pinfo
-npm install async
-```
-
-2. systeminformation
+1. systeminformation
 
 ```sh
 cd ~/MagicMirror/MMM-Pinfo
@@ -42,7 +34,7 @@ npm install systeminformation
 
 ## Updating
 
-```
+```sh
 cd ~/MagicMirror/modules/MMM-Pinfo
 git pull
 npm install
@@ -72,10 +64,10 @@ npm install
 To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `config.js` file in the `MagicMirror/config` directory.
 
 ```js
-{
-  module: 'MMM-Pinfo',
-  position: 'top_left'
-}
+    {
+      module: 'MMM-Pinfo',
+      position: 'top_left'
+    },
 ```
 
 ## Configuration
