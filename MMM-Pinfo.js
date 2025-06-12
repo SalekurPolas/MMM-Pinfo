@@ -197,7 +197,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['DEVICE'].model;
         value.style.textAlign = this.config.valueAlign;
 
-        if (this.config.DEVICE.labelModel.length > this.item) this.item = this.config.DEVICE.labelModel.length;
+        if (this.config.DEVICE.labelModel !== undefined) this.item = Math.max(this.item, this.config.DEVICE.labelModel.length);
         if (this.status['DEVICE'].model.length > this.container) this.container = this.status['DEVICE'].model.length;
 
         container.appendChild(value);
@@ -227,7 +227,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['DEVICE'].serial;
         value.style.textAlign = this.config.valueAlign;
 
-        if (this.config.DEVICE.labelSerial.length > this.item) this.item = this.config.DEVICE.labelSerial.length;
+        if (this.config.DEVICE.labelSerial !== undefined) this.item = Math.max(this.item, this.config.DEVICE.labelSerial.length);
         if (this.status['DEVICE'].serial.length > this.container) this.container = this.status['DEVICE'].serial.length;
 
         container.appendChild(value);
@@ -257,7 +257,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['OS'];
         value.style.textAlign = this.config.valueAlign;
 
-        if (this.config.OS.labelOs.length > this.item) this.item = this.config.OS.labelOs.length;
+        if (this.config.OS.labelOs !== undefined) this.item = Math.max(this.item, this.config.OS.labelOs.length);
         if (this.status['OS'].length > this.container) this.container = this.status['OS'].length;
 
         container.appendChild(value);
@@ -287,7 +287,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['NETWORK'].type;
         value.style.textAlign = this.config.valueAlign;
 
-        if (this.config.NETWORK.labelType.length > this.item) this.item = this.config.NETWORK.labelType.length;
+        if (this.config.NETWORK.labelType !== undefined) this.item = Math.max(this.item, this.config.NETWORK.labelType.length);
         if (this.status['NETWORK'].type.length > this.container) this.container = this.status['NETWORK'].type.length;
 
         container.appendChild(value);
@@ -317,7 +317,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['NETWORK'].ipv4;
         value.style.textAlign = this.config.valueAlign;
 
-        if (this.config.NETWORK.labelIPv4.length > this.item) this.item = this.config.NETWORK.labelIPv4.length;
+        if (this.config.NETWORK.labelIPv4 !== undefined) this.item = Math.max(this.item, this.config.NETWORK.labelIPv4.length);
         if (this.status['NETWORK'].ipv4.length > this.container) this.container = this.status['NETWORK'].ipv4.length;
 
         container.appendChild(value);
@@ -347,7 +347,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['NETWORK'].ipv6;
         value.style.textAlign = this.config.valueAlign;
 
-        if (this.config.NETWORK.labelIPv6.length > this.item) this.item = this.config.NETWORK.labelIPv6.length;
+        if (this.config.NETWORK.labelIPv6 !== undefined) this.item = Math.max(this.item, this.config.NETWORK.labelIPv6.length);
         if (this.status['NETWORK'].ipv6.length > this.container) this.container = this.status['NETWORK'].ipv6.length;
 
         container.appendChild(value);
@@ -377,7 +377,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['NETWORK'].mac;
         value.style.textAlign = this.config.valueAlign;
 
-        if (this.config.NETWORK.labelMac.length > this.item) this.item = this.config.NETWORK.labelMac.length;
+        if (this.config.NETWORK.labelMac !== undefined) this.item = Math.max(this.item, this.config.NETWORK.labelMac.length);
         if (this.status['NETWORK'].mac.length > this.container) this.container = this.status['NETWORK'].mac.length;
 
         container.appendChild(value);
@@ -407,7 +407,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['CPU'].type;
         value.style.textAlign = this.config.valueAlign;
 
-        if (this.config.CPU.labelType.length > this.item) this.item = this.config.CPU.labelType.length;
+        if (this.config.CPU.labelType !== undefined) this.item = Math.max(this.item, this.config.CPU.labelType.length);
         if (this.status['CPU'].type.length > this.container) this.container = this.status['CPU'].type.length;
 
         container.appendChild(value);
@@ -437,7 +437,7 @@ Module.register('MMM-Pinfo', {
         value.innerHTML = this.status['UPTIME'];
         value.style.textAlign = this.config.valueAlign;
 
-        if (this.config.UPTIME.labelUptime.length > this.item) this.item = this.config.UPTIME.labelUptime.length;
+        if (this.config.UPTIME.labelUptime !== undefined) this.item = Math.max(this.item, this.config.UPTIME.labelUptime.length);
         if (this.status['UPTIME'].length > this.container) this.container = this.status['UPTIME'].length;
 
         container.appendChild(value);
@@ -479,7 +479,7 @@ Module.register('MMM-Pinfo', {
         step > 100 ? step = 100 : step = step;
         used.className = "bar step" + step;
 
-        if (this.config.CPU.labelTemp.length > this.item) this.item = this.config.CPU.labelTemp.length;
+        if (this.config.CPU.labelTemp !== undefined) this.item = Math.max(this.item, this.config.CPU.labelTemp.length);
 
         total.appendChild(used);
         container.appendChild(total);
@@ -517,7 +517,7 @@ Module.register('MMM-Pinfo', {
         step > 100 ? step = 100 : step = step;
         used.className = "bar step" + step;
 
-        if (this.config.CPU.labelUsage.length > this.item ) this.item = this.config.CPU.labelUsage.length;
+        if (this.config.CPU.labelUsage !== undefined) this.item = Math.max(this.item, this.config.CPU.labelUsage.length);
 
         total.appendChild(used);
         container.appendChild(total);
@@ -555,7 +555,7 @@ Module.register('MMM-Pinfo', {
         used.className = "bar step" + step;
         used.style.opacity = 0.75;
 
-        if (this.config.RAM.labelRam.length > this.item ) this.item = this.config.RAM.labelRam.length;
+        if (this.config.RAM.labelRam !== undefined) this.item = Math.max(this.item, this.config.RAM.labelRam.length);
 
         total.appendChild(used)
         container.appendChild(total)
@@ -593,7 +593,7 @@ Module.register('MMM-Pinfo', {
         used.className = "bar step" + step;
         used.style.opacity = 0.75;
 
-        if (this.config.STORAGE.labelStorage.length > this.item ) this.item = this.config.STORAGE.labelStorage.length;
+        if (this.config.STORAGE.labelStorage !== undefined) this.item = Math.max(this.item, this.config.STORAGE.labelStorage.length);
 
         total.appendChild(used)
         container.appendChild(total)
