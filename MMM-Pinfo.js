@@ -116,7 +116,7 @@ Module.register('MMM-Pinfo', {
           UPTIME: 'Loading...',
         }
 
-        this.config = { ...this.defaults, ...this.config };
+        this.config = this.merge({}, this.defaults, this.config);
 
         if(this.data.position === 'top_left' || this.data.position === 'bottom_left') {
             this.config.itemAlign = 'flex-start';
@@ -653,4 +653,12 @@ Module.register('MMM-Pinfo', {
         this.updateDom();
         }
     },
+
+    merge: function(e) {
+        for (var o, t, r = Array.prototype.slice.call(arguments, 1); r.length;) {
+            o = r.shift();
+            for (t in o) o.hasOwnProperty(t) && ("object" == typeof e[t] && e[t] && "[object Array]" !== Object.prototype.toString.call(e[t]) && "object" == typeof o[t] && null !== o[t] ? e[t] = configMerge({}, e[t], o[t]) : e[t] = o[t]);
+        }
+        return e;
+    }
 });
