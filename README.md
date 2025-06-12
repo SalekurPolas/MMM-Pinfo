@@ -470,7 +470,7 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
         displayTemp: true,
         orderTemp: 12
       },
-      CPU: {
+      UPTIME: {
           labelUptime: 'Uptime',
           displayUptime: false,
           orderUptime: 13
