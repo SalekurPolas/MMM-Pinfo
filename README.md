@@ -399,95 +399,94 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
 ## Default Configuration
 
 ```js
-{
-  module: 'MMM-Pinfo',
-  position: 'top_left',
-  config: {
-    debug: true,
-    refresh: 5000,
-    itemAlign: 'left',
-    labelAlign: 'left',
-    valueAlign: 'center',
-    labelSize: null,
-    containerSize: null,
+  {
+    module: 'MMM-Pinfo',
+    position: 'top_left',
+    config: {
+      debug: true,
+      refresh: 5000,
+      itemAlign: 'left',
+      labelAlign: 'left',
+      valueAlign: 'center',
+      labelSize: null,
+      containerSize: null,
 
-    DEVICE: {
-      labelModel: "Model",
-      displayModel: true,
-      orderModel: 1,
+      DEVICE: {
+        labelModel: "Model",
+        displayModel: true,
+        orderModel: 1,
 
-      labelSerial: 'Serial',
-      displaySerial: true,
-      orderSerial: 2
-    },
+        labelSerial: 'Serial',
+        displaySerial: true,
+        orderSerial: 2
+      },
 
-    OS: {
-      labelOs: 'OS',
-      displayOs: false,
-      orderOs: 3
-    },
+      OS: {
+        labelOs: 'OS',
+        displayOs: false,
+        orderOs: 3
+      },
 
-    NETWORK: {
-      labelType: 'NET Type',
-      displayType: false,
-      orderType: 4,
+      NETWORK: {
+        labelType: 'NET Type',
+        displayType: false,
+        orderType: 4,
 
-      labelIPv4: 'IPv4',
-      displayIPv4: true,
-      orderIPv4: 5,
+        labelIPv4: 'IPv4',
+        displayIPv4: true,
+        orderIPv4: 5,
 
-      labelIPv6: 'IPv6',
-      displayIPv6: false,
-      orderIPv6: 6,
+        labelIPv6: 'IPv6',
+        displayIPv6: false,
+        orderIPv6: 6,
 
-      labelMac: 'MAC',
-      displayMac: false,
-      orderMac: 7
-    },
+        labelMac: 'MAC',
+        displayMac: false,
+        orderMac: 7
+      },
 
-    RAM: {
-      labelRam: 'RAM',
-      displayRam: true,
-      orderRam: 8
-    },
+      RAM: {
+        labelRam: 'RAM',
+        displayRam: true,
+        orderRam: 8
+      },
 
-    STORAGE: {
-      labelStorage: 'Storage',
-      displayStorage: true,
-      orderStorage: 9,
-    },
+      STORAGE: {
+        labelStorage: 'Storage',
+        displayStorage: true,
+        orderStorage: 9,
+      },
 
-    CPU: {
-      labelType: 'CPU Type',
-      displayType: false,
-      orderType: 10,
+      CPU: {
+        labelType: 'CPU Type',
+        displayType: false,
+        orderType: 10,
 
-      labelUsage: 'CPU Usage',
-      displayUsage: false,
-      orderUsage: 11,
+        labelUsage: 'CPU Usage',
+        displayUsage: false,
+        orderUsage: 11,
 
-      labelTemp: 'CPU Temp',
-      displayTemp: true,
-      orderTemp: 12
-    },
-   CPU: {
-      labelUptime: 'Uptime',
-      displayUptime: false,
-      orderUptime: 13
-    },
-
-    WARNING: {
-      enable: false,
-      interval: 1000 * 60 * 5,
-      check: {
-        CPU_TEMP: 65,
-        CPU_USAGE: 75,
-        RAM_USED: 80,
-        STORAGE_USED: 80
-      }
-    },
-  }
-}
+        labelTemp: 'CPU Temp',
+        displayTemp: true,
+        orderTemp: 12
+      },
+      CPU: {
+          labelUptime: 'Uptime',
+          displayUptime: false,
+          orderUptime: 13
+        },
+      WARNING: {
+        enable: false,
+        interval: 1000 * 60 * 5,
+        check: {
+          CPU_TEMP: 65,
+          CPU_USAGE: 75,
+          RAM_USED: 80,
+          STORAGE_USED: 80
+        }
+      },
+    }
+  },
 ```
 
 ## Issues
