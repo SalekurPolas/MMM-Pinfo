@@ -11,65 +11,65 @@ Module.register('MMM-Pinfo', {
         containerSize: null,
         header: 'Mirror Information',
 
-    DEVICE: {
-        labelModel: "Model",
-        displayModel: true,
-        orderModel: 1,
+        DEVICE: {
+            labelModel: "Model",
+            displayModel: true,
+            orderModel: 1,
 
-        labelSerial: 'Serial',
-        displaySerial: true,
-        orderSerial: 2
+            labelSerial: 'Serial',
+            displaySerial: true,
+            orderSerial: 2
         },
         OS: {
-        labelOs: 'OS',
-        displayOs: false,
-        orderOs: 3
+            labelOs: 'OS',
+            displayOs: false,
+            orderOs: 3
         },
         NETWORK: {
-        labelType: 'NET Type',
-        displayType: false,
-        orderType: 4,
+            labelType: 'NET Type',
+            displayType: false,
+            orderType: 4,
 
-        labelIPv4: 'IPv4',
-        displayIPv4: true,
-        orderIPv4: 5,
+            labelIPv4: 'IPv4',
+            displayIPv4: true,
+            orderIPv4: 5,
 
-        labelIPv6: 'IPv6',
-        displayIPv6: false,
-        orderIPv6: 6,
+            labelIPv6: 'IPv6',
+            displayIPv6: false,
+            orderIPv6: 6,
 
-        labelMac: 'MAC',
-        displayMac: false,
-        orderMac: 7
+            labelMac: 'MAC',
+            displayMac: false,
+            orderMac: 7
         },
         RAM: {
-        labelRam: 'RAM',
+            labelRam: 'RAM',
             displayRam: true,
             orderRam: 8
         },
         STORAGE: {
-        labelStorage: 'Storage',
+            labelStorage: 'Storage',
             displayStorage: true,
             orderStorage: 9,
         },
-    CPU: {
-      labelType: 'CPU Type',
-      displayType: false,
-      orderType: 10,
+        CPU: {
+            labelType: 'CPU Type',
+            displayType: false,
+            orderType: 10,
 
-      labelUsage: 'CPU Usage',
-      displayUsage: false,
-      orderUsage: 11,
+            labelUsage: 'CPU Usage',
+            displayUsage: false,
+            orderUsage: 11,
 
-      labelTemp: 'CPU Temp',
-      displayTemp: true,
-      orderTemp: 12
-    },
-    UPTIME: {
-      labelUptime: 'Uptime',
-      displayUptime: false,
-      orderUptime: 13,
-    },
+            labelTemp: 'CPU Temp',
+            displayTemp: true,
+            orderTemp: 12
+        },
+        UPTIME: {
+            labelUptime: 'Uptime',
+            displayUptime: false,
+            orderUptime: 13,
+        },
         WARNING: {
             enable: false,
             interval: 1000 * 60 * 5,
@@ -87,16 +87,16 @@ Module.register('MMM-Pinfo', {
         this.container = 0;
         
         this.status = {
-        DEVICE: {
-        model: 'Loading...',
-        serial: 'Loading...'
+            DEVICE: {
+                model: 'Loading...',
+                serial: 'Loading...'
             },
             OS: 'Loading...',
             NETWORK: {
-        type: 'Loading...',
-        ipv4: 'Loading...',
-        ipv6: 'Loading...',
-        mac: 'Loading...'
+                type: 'Loading...',
+                ipv4: 'Loading...',
+                ipv6: 'Loading...',
+                mac: 'Loading...'
             },
             MEMORY: {
                 total: 0,
@@ -113,10 +113,10 @@ Module.register('MMM-Pinfo', {
                 usage: 0,
                 temp: 0
             },
-          UPTIME: 'Loading...',
+            UPTIME: 'Loading...',
         }
 
-        this.config = { ...this.defaults, ...this.config };
+        this.config = this.merge({}, this.defaults, this.config);
 
         if(this.data.position === 'top_left' || this.data.position === 'bottom_left') {
             this.config.itemAlign = 'flex-start';
@@ -653,4 +653,12 @@ Module.register('MMM-Pinfo', {
         this.updateDom();
         }
     },
+
+    merge: function(e) {
+        for (var o, t, r = Array.prototype.slice.call(arguments, 1); r.length;) {
+            o = r.shift();
+            for (t in o) o.hasOwnProperty(t) && ("object" == typeof e[t] && e[t] && "[object Array]" !== Object.prototype.toString.call(e[t]) && "object" == typeof o[t] && null !== o[t] ? e[t] = configMerge({}, e[t], o[t]) : e[t] = o[t]);
+        }
+        return e;
+    }
 });
