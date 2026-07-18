@@ -163,33 +163,30 @@ module.exports = NodeHelper.create({
         });
     },
 
-    getCPUInfo: function() {
-        return new Promise((resolve) => {
-            let CPUInfo = this.DeviceInfo[this.DeviceInfo.length - 14].split(":");
+    getCPUInfo: async function() {
+        let CPUInfo = this.DeviceInfo[this.DeviceInfo.length - 14].split(":");
         try {
-                let type = CPUInfo[1].slice(1).split(' ');
-                delete type[type.length-1];
-                delete type[type.length-2];
-                delete type[type.length-3];
-                this.status['CPU'].type = type.toString().replace(new RegExp(',', 'g'), ' ');
+            let type = CPUInfo[1].slice(1).split(' ');
+            delete type[type.length-1];
+            delete type[type.length-2];
+            delete type[type.length-3];
+            this.status['CPU'].type = type.toString().replace(new RegExp(',', 'g'), ' ');
         }
         catch {
             this.status['CPU'].type = 'Not available'
         }
 
-            si.currentLoad().then(data => {
-                this.status['CPU'].usage = data.currentLoad.toFixed(0);
-            }).catch(error => {
-                Log.error(`Error while getting CPU usage: ${error}`);
-            });
+        await si.currentLoad().then(data => {
+            this.status['CPU'].usage = data.currentLoad.toFixed(0);
+        }).catch(error => {
+            Log.error(`Error while getting CPU usage: ${error}`);
+        });
 
-            si.cpuTemperature().then(data => {
-                this.status['CPU'].temp = data.main.toFixed(1);
-            }).catch(error => {
-                Log.error(`Error while getting CPU temperature: ${error}`);
-            });
-            resolve();
-        })
+        await si.cpuTemperature().then(data => {
+            this.status['CPU'].temp = data.main.toFixed(1);
+        }).catch(error => {
+            Log.error(`Error while getting CPU temperature: ${error}`);
+        });
     },
 
     convert: function(octet, FixTo) {
