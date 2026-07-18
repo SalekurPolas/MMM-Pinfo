@@ -156,7 +156,7 @@ Module.register('MMM-Pinfo', {
     },
 
     getDom: function() {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "Pinfo";
 
         if (this.config.DEVICE.displayModel) wrapper.appendChild(this.getDomDeviceModel());
@@ -176,22 +176,22 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomDeviceModel: function() {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.order = this.config.DEVICE.orderModel;
         wrapper.style.justifyContent = this.config.itemAlign;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.DEVICE.labelModel;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var value = document.createElement("div");
+        let value = document.createElement("div");
         value.className = "value";
         value.innerHTML = this.status['DEVICE'].model;
         value.style.textAlign = this.config.valueAlign;
@@ -206,22 +206,22 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomDeviceSerial: function() {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.DEVICE.orderSerial;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.DEVICE.labelSerial;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var value = document.createElement("div");
+        let value = document.createElement("div");
         value.className = "value";
         value.innerHTML = this.status['DEVICE'].serial;
         value.style.textAlign = this.config.valueAlign;
@@ -236,22 +236,22 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomOS: function() {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.OS.orderOs;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.OS.labelOs;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var value = document.createElement("div");
+        let value = document.createElement("div");
         value.className = "value";
         value.innerHTML = this.status['OS'];
         value.style.textAlign = this.config.valueAlign;
@@ -266,22 +266,22 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomNetworkType: function() {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.NETWORK.orderType;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelType;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var value = document.createElement("div");
+        let value = document.createElement("div");
         value.className = "value";
         value.innerHTML = this.status['NETWORK'].type;
         value.style.textAlign = this.config.valueAlign;
@@ -296,22 +296,22 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomNetworkIPv4: function() {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.NETWORK.orderIPv4;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelIPv4;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var value = document.createElement("div");
+        let value = document.createElement("div");
         value.className = "value";
         value.innerHTML = this.status['NETWORK'].ipv4;
         value.style.textAlign = this.config.valueAlign;
@@ -326,22 +326,22 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomNetworkIPv6: function() {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.NETWORK.orderIPv6;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelIPv6;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var value = document.createElement("div");
+        let value = document.createElement("div");
         value.className = "value";
         value.innerHTML = this.status['NETWORK'].ipv6;
         value.style.textAlign = this.config.valueAlign;
@@ -356,22 +356,22 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomNetworkMac: function() {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.NETWORK.orderMac;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelMac;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var value = document.createElement("div");
+        let value = document.createElement("div");
         value.className = "value";
         value.innerHTML = this.status['NETWORK'].mac;
         value.style.textAlign = this.config.valueAlign;
@@ -386,22 +386,22 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomCPUType: function() {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.CPU.orderType;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.CPU.labelType;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var value = document.createElement("div");
+        let value = document.createElement("div");
         value.className = "value";
         value.innerHTML = this.status['CPU'].type;
         value.style.textAlign = this.config.valueAlign;
@@ -416,22 +416,22 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomUptime : function() {
-      var wrapper = document.createElement("div");
+      let wrapper = document.createElement("div");
       wrapper.className = "item";
       wrapper.style.justifyContent = this.config.itemAlign;
       wrapper.style.order = this.config.UPTIME.orderUptime;
 
-      var label = document.createElement("div");
+      let label = document.createElement("div");
       label.className = "label";
       label.style.width = this.labelSize + "px";
       label.style.textAlign = this.config.labelAlign;
       label.innerHTML = this.config.UPTIME.labelUptime;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var value = document.createElement("div");
+        let value = document.createElement("div");
         value.className = "value";
         value.innerHTML = this.status['UPTIME'];
         value.style.textAlign = this.config.valueAlign;
@@ -446,22 +446,22 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomCPUTemp : function() {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.CPU.orderTemp;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.CPU.labelTemp;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var total = document.createElement("div");
+        let total = document.createElement("div");
         total.className = "total";
         if (config.units === 'imperial') {
           total.innerHTML = Math.round(this.status['CPU'].temp * 9/5 + 32, 0) + '\°F';
@@ -470,11 +470,11 @@ Module.register('MMM-Pinfo', {
           total.innerHTML = this.status['CPU'].temp + '\°C';
         }
 
-        var used = document.createElement("div");
+        let used = document.createElement("div");
         used.style.opacity = 0.75;
         used.style.width = this.status['CPU'].temp + "%";
 
-        var step = this.getLevel(this.status['CPU'].temp, -1);
+        let step = this.getLevel(this.status['CPU'].temp, -1);
         step > 100 ? step = 100 : step = step;
         used.className = "bar step" + step;
 
@@ -488,31 +488,31 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomCPUUsage : function() {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.CPU.orderUsage;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.CPU.labelUsage;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var total = document.createElement("div");
+        let total = document.createElement("div");
         total.className = "total";
         total.innerHTML = " &nbsp;";
 
-        var used = document.createElement("div");
+        let used = document.createElement("div");
         used.style.opacity = 0.75;
         used.innerHTML = this.status["CPU"].usage + "%";
         used.style.width = Math.round(this.status['CPU'].usage) + "%";
 
-        var step = this.getLevel(this.status["CPU"].usage, -1);
+        let step = this.getLevel(this.status["CPU"].usage, -1);
         step > 100 ? step = 100 : step = step;
         used.className = "bar step" + step;
 
@@ -526,30 +526,30 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomMemory : function () {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.RAM.orderRam;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.RAM.labelRam;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var total = document.createElement("div");
+        let total = document.createElement("div");
         total.className = "total";
         total.innerHTML = this.status["MEMORY"].total;
 
-        var used = document.createElement("div");
+        let used = document.createElement("div");
         used.style.width = Math.round(this.status["MEMORY"].percent) + "%";
         used.innerHTML = this.status["MEMORY"].used;
 
-        var step = this.getLevel(this.status["MEMORY"].percent, -1);
+        let step = this.getLevel(this.status["MEMORY"].percent, -1);
         step > 100 ? step = 100 : step = step;
         used.className = "bar step" + step;
         used.style.opacity = 0.75;
@@ -564,30 +564,30 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomStorage : function () {
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.STORAGE.orderStorage;
 
-        var label = document.createElement("div");
+        let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.STORAGE.labelStorage;
 
-        var container = document.createElement("div");
+        let container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
 
-        var total = document.createElement("div");
+        let total = document.createElement("div");
         total.className = "total";
         total.innerHTML = this.status["STORAGE"].total;
 
-        var used = document.createElement("div");
+        let used = document.createElement("div");
         used.style.width = Math.round(this.status["STORAGE"].percent) + "%";
         used.innerHTML = this.status["STORAGE"].used;
 
-        var step = this.getLevel(this.status["STORAGE"].percent, -1);
+        let step = this.getLevel(this.status["STORAGE"].percent, -1);
         step > 100 ? step = 100 : step = step;
         used.className = "bar step" + step;
         used.style.opacity = 0.75;
@@ -603,8 +603,8 @@ Module.register('MMM-Pinfo', {
 
     checkWarning : function() {
         if(this.config.WARNING.enable) {
-            for(var name in this.config.WARNING.check) {
-                var checkValue = this.config.WARNING.check[name];
+            for(let name in this.config.WARNING.check) {
+                let checkValue = this.config.WARNING.check[name];
                 if(name == "CPU_TEMP") {
                     let actualValue = parseFloat(this.status["CPU"].temp);
                     if(checkValue < actualValue) this.showWarning(name, actualValue, checkValue);
@@ -631,8 +631,8 @@ Module.register('MMM-Pinfo', {
     },
 
     getLevel: function(number, precision) {
-        var factor = Math.pow(10, precision);
-        var tempNumber = Math.round(number * factor);
+        let factor = Math.pow(10, precision);
+        let tempNumber = Math.round(number * factor);
         return tempNumber / factor;
     },
 

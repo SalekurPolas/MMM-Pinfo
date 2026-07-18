@@ -85,17 +85,17 @@ module.exports = NodeHelper.create({
 
     getDeviceInfo: function() {
         return new Promise((resolve) => {
-            var ModelInfo = this.DeviceInfo[this.DeviceInfo.length - 2].split(":");
+            let ModelInfo = this.DeviceInfo[this.DeviceInfo.length - 2].split(":");
             if (!ModelInfo[1]) {
                 resolve();
                 return;
             }
-            var model = ModelInfo[1].slice(1).split(' ');
+            let model = ModelInfo[1].slice(1).split(' ');
             delete model[model.length-1];
             delete model[model.length-2];
             this.status['DEVICE'].model = model.toString().replace(new RegExp(',', 'g'), ' ');
 
-            var SerialInfo = this.DeviceInfo[this.DeviceInfo.length - 3].split(":");
+            let SerialInfo = this.DeviceInfo[this.DeviceInfo.length - 3].split(":");
             this.status['DEVICE'].serial = SerialInfo[1].slice(1);
             resolve();
         })
@@ -165,9 +165,9 @@ module.exports = NodeHelper.create({
 
     getCPUInfo: function() {
         return new Promise((resolve) => {
-            var CPUInfo = this.DeviceInfo[this.DeviceInfo.length - 14].split(":");
+            let CPUInfo = this.DeviceInfo[this.DeviceInfo.length - 14].split(":");
         try {
-                var type = CPUInfo[1].slice(1).split(' ');
+                let type = CPUInfo[1].slice(1).split(' ');
                 delete type[type.length-1];
                 delete type[type.length-2];
                 delete type[type.length-3];
@@ -194,21 +194,22 @@ module.exports = NodeHelper.create({
 
     convert: function(octet, FixTo) {
         octet = Math.abs(parseInt(octet, 10));
-        var def = [
+        let def = [
             [1, 'B'],
             [1024, 'KB'],
             [1024*1024, 'MB'],
             [1024*1024*1024, 'GB'],
             [1024*1024*1024*1024, 'TB']];
 
-        for(var i = 0; i < def.length; i++){
+        for(let i = 0; i < def.length; i++){
             if(octet < def[i][0]) return (octet / def[i-1][0]).toFixed(FixTo) + def[i - 1][1];
         }
     },
 
     convertTime: function(seconds) {
+	  let humanTime;
       if (seconds > 60*60*24) {
-        var humanTime = Math.round(seconds/(60*60*24), 0) + ' days'
+        humanTime = Math.round(seconds/(60*60*24), 0) + ' days'
       }
       else if (seconds > 60*60) {
         humanTime = Math.round(seconds/(60*60), 0) + ' hours'
