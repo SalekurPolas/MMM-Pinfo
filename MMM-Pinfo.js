@@ -85,7 +85,7 @@ Module.register('MMM-Pinfo', {
     start: function() {
         this.item = 0;
         this.container = 0;
-        
+
         this.status = {
             DEVICE: {
                 model: 'Loading...',
@@ -175,7 +175,7 @@ Module.register('MMM-Pinfo', {
         if (this.config.UPTIME.displayUptime) wrapper.appendChild(this.getDomUptime());
         return wrapper;
     },
-    
+
     getDomDeviceModel: function() {
         var wrapper = document.createElement("div");
         wrapper.className = "item";
@@ -217,7 +217,7 @@ Module.register('MMM-Pinfo', {
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.DEVICE.labelSerial;
-        
+
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -247,7 +247,7 @@ Module.register('MMM-Pinfo', {
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.OS.labelOs;
-        
+
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -277,7 +277,7 @@ Module.register('MMM-Pinfo', {
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelType;
-        
+
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -307,7 +307,7 @@ Module.register('MMM-Pinfo', {
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelIPv4;
-        
+
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -337,7 +337,7 @@ Module.register('MMM-Pinfo', {
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelIPv6;
-        
+
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -367,7 +367,7 @@ Module.register('MMM-Pinfo', {
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.NETWORK.labelMac;
-        
+
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -397,7 +397,7 @@ Module.register('MMM-Pinfo', {
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
         label.innerHTML = this.config.CPU.labelType;
-        
+
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -421,13 +421,13 @@ Module.register('MMM-Pinfo', {
       wrapper.className = "item";
       wrapper.style.justifyContent = this.config.itemAlign;
       wrapper.style.order = this.config.UPTIME.orderUptime;
-      
+
       var label = document.createElement("div");
       label.className = "label";
       label.style.width = this.labelSize + "px";
       label.style.textAlign = this.config.labelAlign;
       label.innerHTML = this.config.UPTIME.labelUptime;
-        
+
         var container = document.createElement("div");
         container.className = "container";
         container.style.width = this.containerSize + "px";
@@ -451,7 +451,7 @@ Module.register('MMM-Pinfo', {
         wrapper.className = "item";
         wrapper.style.justifyContent = this.config.itemAlign;
         wrapper.style.order = this.config.CPU.orderTemp;
-        
+
         var label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
@@ -625,8 +625,8 @@ Module.register('MMM-Pinfo', {
 
     showWarning: function(name, value, check) {
         this.sendNotification("SHOW_ALERT", {
-            type: "notification", 
-            title: this.name + " WARNING", 
+            type: "notification",
+            title: this.name + " WARNING",
             message: name + " value " + value + " exceeds " + check
         });
     },
@@ -647,18 +647,39 @@ Module.register('MMM-Pinfo', {
         if (notification === "STATUS") {
             this.status = payload;
             this.checkWarning();
-            
+
         this.config.containerSize ? this.containerSize = this.config.containerSize : this.containerSize = (this.container * 7) + 10;
         this.config.labelSize ? this.labelSize = this.config.labelSize : this.labelSize = (this.item * 7) + 10;
         this.updateDom();
         }
     },
 
-    merge: function(e) {
-        for (var o, t, r = Array.prototype.slice.call(arguments, 1); r.length;) {
-            o = r.shift();
-            for (t in o) o.hasOwnProperty(t) && ("object" == typeof e[t] && e[t] && "[object Array]" !== Object.prototype.toString.call(e[t]) && "object" == typeof o[t] && null !== o[t] ? e[t] = configMerge({}, e[t], o[t]) : e[t] = o[t]);
+    merge: function(target, ...sources) {
+        const toString = Object.prototype.toString;
+
+        const isPlainObject = (value) => {
+            return toString.call(value) === "[object Object]";
+        };
+
+        const cloneValue = (value) => {
+            if (Array.isArray(value)) return value.slice();
+            if (isPlainObject(value)) return this.merge({}, value);
+            return value;
+        };
+
+        const output = isPlainObject(target) ? target : {};
+
+        for (const source of sources) {
+            if (!isPlainObject(source)) continue;
+
+            for (const [key, sourceValue] of Object.entries(source)) {
+                const targetValue = output[key];
+                output[key] = isPlainObject(sourceValue)
+                    ? this.merge(isPlainObject(targetValue) ? targetValue : {}, sourceValue)
+                    : cloneValue(sourceValue);
+            }
         }
-        return e;
+
+        return output;
     }
 });
