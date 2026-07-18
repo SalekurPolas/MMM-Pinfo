@@ -143,10 +143,6 @@ Module.register('MMM-Pinfo', {
         return [this.file('MMM-Pinfo.css')];
     },
 
-    getScripts: function() {
-        return    ['moment.js'];
-    },
-
     getHeader: function() {
         if(this.config.header) {
             return this.data.header ? this.data.header : this.config.header;
