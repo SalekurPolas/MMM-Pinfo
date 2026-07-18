@@ -84,82 +84,67 @@ module.exports = NodeHelper.create({
     },
 
     getDeviceInfo: function() {
-        return new Promise((resolve) => {
-            let ModelInfo = this.DeviceInfo[this.DeviceInfo.length - 2].split(":");
-            if (!ModelInfo[1]) {
-                resolve();
-                return;
-            }
-            let model = ModelInfo[1].slice(1).split(' ');
-            delete model[model.length-1];
-            delete model[model.length-2];
-            this.status['DEVICE'].model = model.toString().replace(new RegExp(',', 'g'), ' ');
+        let ModelInfo = this.DeviceInfo[this.DeviceInfo.length - 2].split(":");
+        if (!ModelInfo[1]) {
+            return;
+        }
+        let model = ModelInfo[1].slice(1).split(' ');
+        delete model[model.length-1];
+        delete model[model.length-2];
+        this.status['DEVICE'].model = model.toString().replace(new RegExp(',', 'g'), ' ');
 
-            let SerialInfo = this.DeviceInfo[this.DeviceInfo.length - 3].split(":");
-            this.status['DEVICE'].serial = SerialInfo[1].slice(1);
-            resolve();
-        })
+        let SerialInfo = this.DeviceInfo[this.DeviceInfo.length - 3].split(":");
+        this.status['DEVICE'].serial = SerialInfo[1].slice(1);
     },
 
-    getOSInfo: function() {
-        return new Promise((resolve) => {
-            si.osInfo().then(data => {
-                this.status['OS'] = data.distro.split(' ')[0] + " " + data.release + " (" + data.codename + ")";
-                resolve();
-            }).catch(error => {
-                Log.error(`Error while getting OS info: ${error}`);
-            });
-        })
-    },
-
-    getNetworkInfo: function() {
-        return new Promise((resolve) => {
-            si.networkInterfaceDefault().then(defaultInt => {
-                si.networkInterfaces().then(data => {
-                    data.forEach(net => {
-                        if((net.iface != "lo") && (net.iface === defaultInt)) {
-                            this.status['NETWORK'].type = net.iface;
-                            this.status['NETWORK'].ipv4 = net.ip4;
-                            this.status['NETWORK'].ipv6 = net.ip6;
-                            this.status['NETWORK'].mac = net.mac;
-                        } resolve();
-                    });
-                }).catch(error => {
-                    Log.error(`Error while getting network interfaces: ${error}`);
-                });
-            }).catch(error => {
-                Log.error(`Error while getting default network interface: ${error}`);
-            });
-        })
-    },
-
-    getMemoryInfo: function() {
-        return new Promise((resolve) => {
-            si.mem().then(data => {
-                this.status['MEMORY'].total = this.convert(data.total, 0);
-                this.status['MEMORY'].used = this.convert(data.used-data.buffcache, 2);
-                this.status['MEMORY'].percent = ((data.used-data.buffcache) / data.total * 100).toFixed(0);
-                resolve();
-            }).catch(error => {
-                Log.error(`Error while getting memory info: ${error}`);
-            });
+    getOSInfo: async function() {
+        await si.osInfo().then(data => {
+            this.status['OS'] = data.distro.split(' ')[0] + " " + data.release + " (" + data.codename + ")";
+        }).catch(error => {
+            Log.error(`Error while getting OS info: ${error}`);
         });
     },
 
-    getStorageInfo: function() {
-        return new Promise((resolve) => {
-            si.fsSize().then(data => {
-                data.forEach(partition => {
-                    if(partition.mount === '/') {
-                        this.status['STORAGE'].total = this.convert(partition.size, 2);
-                        this.status['STORAGE'].used = this.convert(partition.used, 2);
-                        this.status['STORAGE'].percent = partition.use;
-                        resolve();
+    getNetworkInfo: async function() {
+        await si.networkInterfaceDefault().then(async defaultInt => {
+            await si.networkInterfaces().then(data => {
+                data.forEach(net => {
+                    if((net.iface != "lo") && (net.iface === defaultInt)) {
+                        this.status['NETWORK'].type = net.iface;
+                        this.status['NETWORK'].ipv4 = net.ip4;
+                        this.status['NETWORK'].ipv6 = net.ip6;
+                        this.status['NETWORK'].mac = net.mac;
                     }
-                })
+                });
             }).catch(error => {
-                Log.error(`Error while getting storage info: ${error}`);
+                Log.error(`Error while getting network interfaces: ${error}`);
             });
+        }).catch(error => {
+            Log.error(`Error while getting default network interface: ${error}`);
+        });
+    },
+
+    getMemoryInfo: async function() {
+        await si.mem().then(data => {
+            this.status['MEMORY'].total = this.convert(data.total, 0);
+            this.status['MEMORY'].used = this.convert(data.used-data.buffcache, 2);
+            this.status['MEMORY'].percent = ((data.used-data.buffcache) / data.total * 100).toFixed(0);
+        }).catch(error => {
+            Log.error(`Error while getting memory info: ${error}`);
+        });
+    },
+
+    getStorageInfo: async function() {
+        await si.fsSize().then(data => {
+            data.forEach(partition => {
+                if(partition.mount === '/') {
+                    this.status['STORAGE'].total = this.convert(partition.size, 2);
+                    this.status['STORAGE'].used = this.convert(partition.used, 2);
+                    this.status['STORAGE'].percent = partition.use;
+                }
+            })
+        }).catch(error => {
+            Log.error(`Error while getting storage info: ${error}`);
         });
     },
 
