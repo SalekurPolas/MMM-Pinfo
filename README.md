@@ -83,12 +83,6 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
     </thead>
     <tbody>
       <tr>
-        <td><code>debug</code></td>
-        <td align=center><code>boolean</code></td>
-        <td align=center><code>true</code></td>
-        <td>Enable printing debug information</td>
-      </tr>
-      <tr>
         <td><code>refresh</code></td>
         <td align=center><code>number</code></td>
         <td align=center><code>5000</code></td>
@@ -403,7 +397,6 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
     module: 'MMM-Pinfo',
     position: 'top_left',
     config: {
-      debug: true,
       refresh: 5000,
       itemAlign: 'left',
       labelAlign: 'left',

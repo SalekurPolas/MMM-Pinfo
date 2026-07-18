@@ -4,7 +4,7 @@ const fs = require('fs');
 const os = require('os');
 const si = require('systeminformation');
 const NodeHelper = require('node_helper');
-var log = (...args) => {}
+const Log = require('logger');
 
 module.exports = NodeHelper.create({
     start: function() {
@@ -48,12 +48,6 @@ module.exports = NodeHelper.create({
     socketNotificationReceived: function(notification, payload) {
         if (notification === "CONFIG") {
             this.config = payload;
-            if(this.config.debug) {
-                log = (...args) => {
-                    console.log("[" + this.name + "]", ...args);
-                }
-            }
-
             this.collectStaticInfo();
         }
     },
@@ -113,7 +107,7 @@ module.exports = NodeHelper.create({
                 this.status['OS'] = data.distro.split(' ')[0] + " " + data.release + " (" + data.codename + ")";
                 resolve();
             }).catch(error => {
-                log(error);
+                Log.error(`Error while getting OS info: ${error}`);
             });
         })
     },
@@ -131,10 +125,10 @@ module.exports = NodeHelper.create({
                         } resolve();
                     });
                 }).catch(error => {
-                    log(error);
+                    Log.error(`Error while getting network interfaces: ${error}`);
                 });
             }).catch(error => {
-                log(error);
+                Log.error(`Error while getting default network interface: ${error}`);
             });
         })
     },
@@ -147,7 +141,7 @@ module.exports = NodeHelper.create({
                 this.status['MEMORY'].percent = ((data.used-data.buffcache) / data.total * 100).toFixed(0);
                 resolve();
             }).catch(error => {
-                log(error);
+                Log.error(`Error while getting memory info: ${error}`);
             });
         });
     },
@@ -164,7 +158,7 @@ module.exports = NodeHelper.create({
                     }
                 })
             }).catch(error => {
-                log(error);
+                Log.error(`Error while getting storage info: ${error}`);
             });
         });
     },
@@ -186,13 +180,13 @@ module.exports = NodeHelper.create({
             si.currentLoad().then(data => {
                 this.status['CPU'].usage = data.currentLoad.toFixed(0);
             }).catch(error => {
-                log(error);
+                Log.error(`Error while getting CPU usage: ${error}`);
             });
 
             si.cpuTemperature().then(data => {
                 this.status['CPU'].temp = data.main.toFixed(1);
             }).catch(error => {
-                log(error);
+                Log.error(`Error while getting CPU temperature: ${error}`);
             });
             resolve();
         })

@@ -2,7 +2,6 @@
 
 Module.register('MMM-Pinfo', {
     defaults: {
-        debug: false,
         refresh: 5000,
         itemAlign: 'left',
         labelAlign: 'left',
