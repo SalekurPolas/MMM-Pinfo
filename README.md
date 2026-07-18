@@ -29,7 +29,7 @@ git pull
 npm install
 ```
 
-## Usage
+## Features
 
 `MMM-Pinfo` module can display the following information
 
@@ -48,7 +48,7 @@ npm install
 | CPU temp        | Display current temperature of the CPU
 | System uptime   | Display the uptime of the system
 
-### Module Usage
+## Configuration
 
 To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `config.js` file in the `MagicMirror/config` directory.
 
@@ -59,7 +59,7 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
     },
 ```
 
-## Configuration
+### Options
 
 <table>
     <thead>
@@ -379,7 +379,7 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
     </tbody>
   </table>
 
-## Default Configuration
+### Default Configuration
 
 ```js
   {
