@@ -1,7 +1,7 @@
 'use strict';
 
-const fs = require('fs');
-const os = require('os');
+const fs = require('node:fs');
+const os = require('node:os');
 const si = require('systeminformation');
 const NodeHelper = require('node_helper');
 const Log = require('logger');
