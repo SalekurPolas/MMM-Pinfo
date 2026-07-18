@@ -5,7 +5,7 @@ const NodeHelper = require('node_helper');
 const Log = require('logger');
 
 module.exports = NodeHelper.create({
-    start: function() {
+    start() {
         this.config = {};
         this.timer = null;
 
@@ -40,21 +40,21 @@ module.exports = NodeHelper.create({
         }
     },
 
-    socketNotificationReceived: function(notification, payload) {
+    socketNotificationReceived(notification, payload) {
         if (notification === "CONFIG") {
             this.config = payload;
             this.collectStaticInfo();
         }
     },
 
-    collectStaticInfo: async function() {
+    async collectStaticInfo() {
         await this.getDeviceInfo();
         await this.getOSInfo();
         await this.getCPUType();
         this.scheduler();
     },
 
-    scheduler: async function() {
+    async scheduler() {
         clearTimeout(this.timer);
 
         await this.collectDynamicInfo(resolve => {
@@ -66,7 +66,7 @@ module.exports = NodeHelper.create({
         }, this.config.refresh);
     },
 
-    collectDynamicInfo: async function(resolve) {
+    async collectDynamicInfo(resolve) {
         await this.getNetworkInfo();
         await this.getMemoryInfo();
         await this.getStorageInfo();
@@ -75,11 +75,11 @@ module.exports = NodeHelper.create({
         resolve();
     },
 
-    getUptime: function() {
+    getUptime() {
       this.status['UPTIME'] = this.convertTime(si.time().uptime)
     },
 
-    getDeviceInfo: async function() {
+    async getDeviceInfo() {
         await si.system().then(data => {
             this.status['DEVICE'].model = data.model;
             this.status['DEVICE'].serial = data.serial;
@@ -88,7 +88,7 @@ module.exports = NodeHelper.create({
         });
     },
 
-    getOSInfo: async function() {
+    async getOSInfo() {
         await si.osInfo().then(data => {
             this.status['OS'] = data.distro.split(' ')[0] + " " + data.release + " (" + data.codename + ")";
         }).catch(error => {
@@ -96,7 +96,7 @@ module.exports = NodeHelper.create({
         });
     },
 
-    getNetworkInfo: async function() {
+    async getNetworkInfo() {
         await si.networkInterfaceDefault().then(async defaultInt => {
             await si.networkInterfaces().then(data => {
                 data.forEach(net => {
@@ -115,7 +115,7 @@ module.exports = NodeHelper.create({
         });
     },
 
-    getMemoryInfo: async function() {
+    async getMemoryInfo() {
         await si.mem().then(data => {
             this.status['MEMORY'].total = this.convert(data.total, 0);
             this.status['MEMORY'].used = this.convert(data.used-data.buffcache, 2);
@@ -125,7 +125,7 @@ module.exports = NodeHelper.create({
         });
     },
 
-    getStorageInfo: async function() {
+    async getStorageInfo() {
         await si.fsSize().then(data => {
             data.forEach(partition => {
                 if(partition.mount === '/') {
@@ -139,7 +139,7 @@ module.exports = NodeHelper.create({
         });
     },
 
-    getCPUType: async function() {
+    async getCPUType() {
         await si.cpu().then(data => {
             this.status['CPU'].type = data.brand;
         }).catch(error => {
@@ -147,7 +147,7 @@ module.exports = NodeHelper.create({
         });
     },
 
-    getCPUInfo: async function() {
+    async getCPUInfo() {
         await si.currentLoad().then(data => {
             this.status['CPU'].usage = data.currentLoad.toFixed(0);
         }).catch(error => {
@@ -161,7 +161,7 @@ module.exports = NodeHelper.create({
         });
     },
 
-    convert: function(octet, FixTo) {
+    convert(octet, FixTo) {
         octet = Math.abs(parseInt(octet, 10));
         let def = [
             [1, 'B'],
@@ -175,7 +175,7 @@ module.exports = NodeHelper.create({
         }
     },
 
-    convertTime: function(seconds) {
+    convertTime(seconds) {
 	  let humanTime;
       if (seconds > 60*60*24) {
         humanTime = Math.round(seconds/(60*60*24), 0) + ' days'
