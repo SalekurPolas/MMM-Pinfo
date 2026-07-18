@@ -1,7 +1,5 @@
 'use strict';
 
-const fs = require('node:fs');
-const os = require('node:os');
 const si = require('systeminformation');
 const NodeHelper = require('node_helper');
 const Log = require('logger');
@@ -40,9 +38,6 @@ module.exports = NodeHelper.create({
           },
           UPTIME: 'unknown'
         }
-
-        this.network = os.networkInterfaces();
-        this.DeviceInfo = fs.readFileSync('/proc/cpuinfo', 'utf8').split("\n");
     },
 
     socketNotificationReceived: function(notification, payload) {
@@ -55,6 +50,7 @@ module.exports = NodeHelper.create({
     collectStaticInfo: async function() {
         await this.getDeviceInfo();
         await this.getOSInfo();
+        await this.getCPUType();
         this.scheduler();
     },
 
@@ -83,18 +79,13 @@ module.exports = NodeHelper.create({
       this.status['UPTIME'] = this.convertTime(si.time().uptime)
     },
 
-    getDeviceInfo: function() {
-        let ModelInfo = this.DeviceInfo[this.DeviceInfo.length - 2].split(":");
-        if (!ModelInfo[1]) {
-            return;
-        }
-        let model = ModelInfo[1].slice(1).split(' ');
-        delete model[model.length-1];
-        delete model[model.length-2];
-        this.status['DEVICE'].model = model.toString().replace(new RegExp(',', 'g'), ' ');
-
-        let SerialInfo = this.DeviceInfo[this.DeviceInfo.length - 3].split(":");
-        this.status['DEVICE'].serial = SerialInfo[1].slice(1);
+    getDeviceInfo: async function() {
+        await si.system().then(data => {
+            this.status['DEVICE'].model = data.model;
+            this.status['DEVICE'].serial = data.serial;
+        }).catch(error => {
+            Log.error(`Error while getting device info: ${error}`);
+        });
     },
 
     getOSInfo: async function() {
@@ -148,19 +139,15 @@ module.exports = NodeHelper.create({
         });
     },
 
-    getCPUInfo: async function() {
-        let CPUInfo = this.DeviceInfo[this.DeviceInfo.length - 14].split(":");
-        try {
-            let type = CPUInfo[1].slice(1).split(' ');
-            delete type[type.length-1];
-            delete type[type.length-2];
-            delete type[type.length-3];
-            this.status['CPU'].type = type.toString().replace(new RegExp(',', 'g'), ' ');
-        }
-        catch {
-            this.status['CPU'].type = 'Not available'
-        }
+    getCPUType: async function() {
+        await si.cpu().then(data => {
+            this.status['CPU'].type = data.brand;
+        }).catch(error => {
+            Log.error(`Error while getting CPU type: ${error}`);
+        });
+    },
 
+    getCPUInfo: async function() {
         await si.currentLoad().then(data => {
             this.status['CPU'].usage = data.currentLoad.toFixed(0);
         }).catch(error => {
