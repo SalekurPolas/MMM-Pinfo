@@ -21,17 +21,6 @@ cd MMM-Pinfo
 npm install
 ```
 
-### Manual Installation
-
-Although dependencies will automatically install during installation on MagicMirror, you can manually install them by the following steps.
-
-1. systeminformation
-
-```sh
-cd ~/MagicMirror/MMM-Pinfo
-npm install systeminformation
-```
-
 ## Updating
 
 ```sh
@@ -40,7 +29,7 @@ git pull
 npm install
 ```
 
-## Usage
+## Features
 
 `MMM-Pinfo` module can display the following information
 
@@ -59,7 +48,7 @@ npm install
 | CPU temp        | Display current temperature of the CPU
 | System uptime   | Display the uptime of the system
 
-### Module Usage
+## Configuration
 
 To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `config.js` file in the `MagicMirror/config` directory.
 
@@ -70,7 +59,7 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
     },
 ```
 
-## Configuration
+### Options
 
 <table>
     <thead>
@@ -82,12 +71,6 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><code>debug</code></td>
-        <td align=center><code>boolean</code></td>
-        <td align=center><code>true</code></td>
-        <td>Enable printing debug information</td>
-      </tr>
       <tr>
         <td><code>refresh</code></td>
         <td align=center><code>number</code></td>
@@ -396,14 +379,13 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
     </tbody>
   </table>
 
-## Default Configuration
+### Default Configuration
 
 ```js
   {
     module: 'MMM-Pinfo',
     position: 'top_left',
     config: {
-      debug: true,
       refresh: 5000,
       itemAlign: 'left',
       labelAlign: 'left',
