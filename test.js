@@ -1,7 +1,8 @@
 const assert = require('assert');
 
 console.log('--- Testing node_helper.js logic ---');
-// Mock MagicMirror built-in modules in require.cache
+// mock mm built-in modules in require.cache
+
 const Module = require('module');
 const originalRequire = Module.prototype.require;
 Module.prototype.require = function(path) {
@@ -10,12 +11,14 @@ Module.prototype.require = function(path) {
             create: (obj) => obj
         };
     }
+
     if (path === 'logger') {
         return {
             error: (msg) => console.error('[MOCK LOG ERROR]', msg),
             log: (msg) => console.log('[MOCK LOG]', msg)
         };
     }
+    
     return originalRequire.apply(this, arguments);
 };
 
@@ -23,7 +26,7 @@ const si = require('systeminformation');
 const helper = require('./node_helper.js');
 helper.start();
 
-// 1. Test convert
+// test convert
 console.log('Testing convert()...');
 assert.strictEqual(helper.convert(0), '0B');
 assert.strictEqual(helper.convert(null), '0B');
@@ -36,7 +39,7 @@ assert.strictEqual(helper.convert(1099511627776, 2), '1.00TB');
 assert.strictEqual(helper.convert(2199023255552, 2), '2.00TB');
 console.log('✓ convert() passed all test cases');
 
-// 2. Test convertTime
+// test convert time
 console.log('Testing convertTime()...');
 assert.strictEqual(helper.convertTime(-5), '0 seconds');
 assert.strictEqual(helper.convertTime(30), '30 seconds');
@@ -45,7 +48,7 @@ assert.strictEqual(helper.convertTime(3600 * 3), '3 hours');
 assert.strictEqual(helper.convertTime(86400 * 5), '5 days');
 console.log('✓ convertTime() passed all test cases');
 
-// 3. Test dynamic data collection
+// test dynamic data collection
 console.log('Testing collectDynamicInfo()...');
 helper.collectDynamicInfo().then(() => {
     console.log('Status after collectDynamicInfo:');
@@ -60,8 +63,8 @@ helper.collectDynamicInfo().then(() => {
     assert(typeof helper.status.CPU.temp !== 'undefined');
     console.log('✓ Dynamic data collection passed');
 
-    // 4. Test MMM-Pinfo warning logic
-    console.log('\n--- Testing MMM-Pinfo warning debounce logic ---');
+    // test warning logic
+    console.log('\n--- Testing warning debounce logic ---');
     const mockModule = {
         name: 'MMM-Pinfo',
         config: {
@@ -86,16 +89,14 @@ helper.collectDynamicInfo().then(() => {
         }
     };
 
-    // Borrow checkWarning logic
+    // borrow check warning logic
     const checkWarning = function() {
         if (!this.config.WARNING || !this.config.WARNING.enable) return;
 
-        const interval = typeof this.config.WARNING.interval === 'number'
-            ? this.config.WARNING.interval
-            : 1000 * 60 * 5;
+        const interval = typeof this.config.WARNING.interval === 'number' ? this.config.WARNING.interval : 1000 * 60 * 5;
         const now = Date.now();
-
         const checks = this.config.WARNING.check || {};
+
         for (let name in checks) {
             const checkValue = checks[name];
             let actualValue = null;
@@ -122,33 +123,37 @@ helper.collectDynamicInfo().then(() => {
         }
     };
 
-    // First run: should trigger alerts for both CPU_TEMP and RAM_USED
+    // first run: should trigger alerts for both CPU_TEMP and RAM_USED
     checkWarning.call(mockModule);
     assert.strictEqual(mockModule.alertsTriggered.length, 2);
     console.log('✓ Initial alerts triggered:', mockModule.alertsTriggered.map(a => a.name));
 
-    // Immediate second run: should NOT trigger alerts because interval has not passed!
+    // immediate second run: should NOT trigger alerts because interval has not passed!
     checkWarning.call(mockModule);
     assert.strictEqual(mockModule.alertsTriggered.length, 2);
     console.log('✓ Debounce prevented spamming on immediate rerun (0 new alerts)');
 
-    // Fast-forward lastWarningTimes to simulate interval passed
+    // fast-forward lastWarningTimes to simulate interval passed
     mockModule.lastWarningTimes['CPU_TEMP'] = Date.now() - 70000;
     mockModule.lastWarningTimes['RAM_USED'] = Date.now() - 70000;
     checkWarning.call(mockModule);
     assert.strictEqual(mockModule.alertsTriggered.length, 4);
     console.log('✓ Alerts triggered again after interval elapsed');
 
-    // 5. Test getLevel logic
+    // test get level logic
     const getLevel = function(number, precision) {
         if (isNaN(number) || number === null || number === undefined) return 0;
+        
         let factor = Math.pow(10, precision);
         let tempNumber = Math.round(Number(number) * factor);
         let level = tempNumber / factor;
+        
         if (level < 0) return 0;
         if (level > 100) return 100;
+        
         return level;
     };
+    
     assert.strictEqual(getLevel(45, -1), 50);
     assert.strictEqual(getLevel(12, -1), 10);
     assert.strictEqual(getLevel(110, -1), 100);
