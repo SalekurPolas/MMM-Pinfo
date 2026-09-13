@@ -4,7 +4,7 @@
   "description": "An informational module for MagicMirror².",
   "main": "MMM-Pinfo.js",
   "scripts": {
-    "test": "node test_suite.js"
+    "test": "node test.js"
   },
   "repository": {
     "type": "git",
