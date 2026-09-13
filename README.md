@@ -114,6 +114,12 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
         <td>Display FontAwesome icons alongside item labels.</td>
       </tr>
       <tr>
+        <td><code>theme</code></td>
+        <td align=center><code>string</code></td>
+        <td align=center><code>'default'</code></td>
+        <td>Progress bar color theme: <code>'default'</code> (purple/blue), <code>'trafficLight'</code> (green/amber/red), or <code>'monochrome'</code> (clean silver/white).</td>
+      </tr>
+      <tr>
         <td><code>mount</code></td>
         <td align=center><code>string</code></td>
         <td align=center><code>null</code></td>
@@ -416,6 +422,9 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
       valueAlign: 'center',
       labelSize: null,
       containerSize: null,
+      showIcons: false,
+      theme: 'default',
+      mount: null,
 
       DEVICE: {
         labelModel: "Model",

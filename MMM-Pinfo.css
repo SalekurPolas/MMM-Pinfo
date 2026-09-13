@@ -122,3 +122,51 @@
 .Pinfo .bar.step100 {
   background-color: #d32;
 }
+
+/* Traffic Light Theme (Green -> Amber -> Red) */
+.Pinfo.theme-trafficLight .bar.step0,
+.Pinfo.theme-trafficLight .bar.step10,
+.Pinfo.theme-trafficLight .bar.step20,
+.Pinfo.theme-trafficLight .bar.step30,
+.Pinfo.theme-trafficLight .bar.step40,
+.Pinfo.scheme-trafficLight .bar.step0,
+.Pinfo.scheme-trafficLight .bar.step10,
+.Pinfo.scheme-trafficLight .bar.step20,
+.Pinfo.scheme-trafficLight .bar.step30,
+.Pinfo.scheme-trafficLight .bar.step40 {
+  background-color: #27ae60;
+}
+
+.Pinfo.theme-trafficLight .bar.step50,
+.Pinfo.theme-trafficLight .bar.step60,
+.Pinfo.theme-trafficLight .bar.step70,
+.Pinfo.scheme-trafficLight .bar.step50,
+.Pinfo.scheme-trafficLight .bar.step60,
+.Pinfo.scheme-trafficLight .bar.step70 {
+  background-color: #f39c12;
+}
+
+.Pinfo.theme-trafficLight .bar.step80,
+.Pinfo.theme-trafficLight .bar.step90,
+.Pinfo.theme-trafficLight .bar.step100,
+.Pinfo.scheme-trafficLight .bar.step80,
+.Pinfo.scheme-trafficLight .bar.step90,
+.Pinfo.scheme-trafficLight .bar.step100 {
+  background-color: #e74c3c;
+}
+
+/* Monochrome Theme (Minimalist clean white/silver) */
+.Pinfo.theme-monochrome .bar,
+.Pinfo.scheme-monochrome .bar {
+  background-color: #bdc3c7;
+}
+
+.Pinfo.theme-monochrome .bar.step80,
+.Pinfo.theme-monochrome .bar.step90,
+.Pinfo.theme-monochrome .bar.step100,
+.Pinfo.scheme-monochrome .bar.step80,
+.Pinfo.scheme-monochrome .bar.step90,
+.Pinfo.scheme-monochrome .bar.step100 {
+  background-color: #ffffff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+}

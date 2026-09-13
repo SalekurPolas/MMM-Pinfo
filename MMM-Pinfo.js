@@ -11,6 +11,7 @@ Module.register('MMM-Pinfo', {
         header: 'Mirror Information',
         units: null,
         showIcons: false,
+        theme: 'default',
         mount: null,
         icons: {
             model: 'fas fa-desktop',
@@ -178,6 +179,11 @@ Module.register('MMM-Pinfo', {
     getDom: function() {
         let wrapper = document.createElement("div");
         wrapper.className = "Pinfo";
+
+        const activeTheme = this.config.theme || this.config.colorScheme;
+        if (activeTheme && activeTheme !== 'default') {
+            wrapper.classList.add("theme-" + activeTheme);
+        }
 
         if (this.config.DEVICE.displayModel) wrapper.appendChild(this.getDomDeviceModel());
         if (this.config.DEVICE.displaySerial) wrapper.appendChild(this.getDomDeviceSerial());

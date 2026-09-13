@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   * Added subtle CSS animations (`transition: width 0.4s ease-in-out`) when CPU, RAM, and temperature loads change.
 * **Module Suspend / Resume Optimization**:
   * Added socket communication for `SUSPEND` and `RESUME` events. Polling is stopped when MagicMirror enters screen-sleep or when the module is hidden, saving CPU cycles and power on Raspberry Pi.
+* **Progress Bar Themes**:
+  * Added `theme: 'default'` supporting `'trafficLight'` (intuitive Green $\rightarrow$ Amber $\rightarrow$ Red heat levels) and `'monochrome'` (minimalist silver/white for clean B&W mirrors).
 * **Raspberry Pi Under-Voltage & Throttle Detection**:
   * Added hardware-level health monitoring via `vcgencmd get_throttled` detecting power supply voltage drops and CPU throttling. Displays visual indicators (`⚡` / `🔥`) and triggers notifications before power instability crashes the Pi. (Safely ignored on non-Pi platforms).
 
