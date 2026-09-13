@@ -3,6 +3,7 @@
 const si = require('systeminformation');
 const NodeHelper = require('node_helper');
 const Log = require('logger');
+const { exec } = require('child_process');
 
 module.exports = NodeHelper.create({
     start() {
@@ -13,7 +14,8 @@ module.exports = NodeHelper.create({
         this.status = {
           DEVICE: {
             model: 'unknown',
-            serial: 'unknown'
+            serial: 'unknown',
+            throttled: null
           },
           OS: 'unknown',
           NETWORK: {
@@ -98,7 +100,8 @@ module.exports = NodeHelper.create({
             this.getMemoryInfo(),
             this.getStorageInfo(),
             this.getCPUInfo(),
-            this.getUptime()
+            this.getUptime(),
+            this.getPiThrottle()
         ]);
     },
 
@@ -280,6 +283,43 @@ module.exports = NodeHelper.create({
         }
 
         return humanTime;
+    },
+
+    async getPiThrottle() {
+        if (process.platform !== 'linux') {
+            return;
+        }
+
+        try {
+            await new Promise((resolve) => {
+                exec('vcgencmd get_throttled', { timeout: 1500 }, (error, stdout) => {
+                    if (error || !stdout) {
+                        return resolve();
+                    }
+
+                    const match = stdout.trim().match(/throttled=(0x[0-9a-fA-F]+)/);
+
+                    if (match) {
+                        const code = parseInt(match[1], 16);
+                        this.status['DEVICE'].throttled = {
+                            code,
+                            underVoltage: Boolean(code & 0x1),
+                            armFrequencyCapped: Boolean(code & 0x2),
+                            currentlyThrottled: Boolean(code & 0x4),
+                            softTempLimit: Boolean(code & 0x8),
+                            hasUnderVoltage: Boolean(code & 0x10000),
+                            hasArmFrequencyCapped: Boolean(code & 0x20000),
+                            hasThrottled: Boolean(code & 0x40000),
+                            hasSoftTempLimit: Boolean(code & 0x80000)
+                        };
+                    }
+
+                    resolve();
+                });
+            });
+        } catch (error) {
+            // Fail silently on non-Pi Linux environments
+        }
     },
 
 });

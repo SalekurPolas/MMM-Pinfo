@@ -94,7 +94,9 @@ Module.register('MMM-Pinfo', {
                 CPU_TEMP: 65,
                 CPU_USAGE: 75,
                 RAM_USED: 80,
-                STORAGE_USED: 80
+                STORAGE_USED: 80,
+                UNDER_VOLTAGE: true,
+                THROTTLED: true
             }
         },
     },
@@ -107,7 +109,8 @@ Module.register('MMM-Pinfo', {
         this.status = {
             DEVICE: {
                 model: 'Loading...',
-                serial: 'Loading...'
+                serial: 'Loading...',
+                throttled: null
             },
             OS: 'Loading...',
             NETWORK: {
@@ -291,12 +294,32 @@ Module.register('MMM-Pinfo', {
     },
 
     getDomDeviceModel: function() {
-        return this.createItemElement(
+        const item = this.createItemElement(
             this.config.DEVICE.orderModel,
             this.config.DEVICE.labelModel,
             this.status.DEVICE.model,
             'model'
         );
+
+        if (this.status.DEVICE && this.status.DEVICE.throttled) {
+            const thr = this.status.DEVICE.throttled;
+            const valueEl = item.querySelector('.value');
+            if (valueEl) {
+                if (thr.underVoltage) {
+                    const bolt = document.createElement('i');
+                    bolt.className = 'fas fa-bolt warning-indicator danger';
+                    bolt.title = 'Under-voltage detected!';
+                    valueEl.appendChild(bolt);
+                } else if (thr.currentlyThrottled) {
+                    const flame = document.createElement('i');
+                    flame.className = 'fas fa-fire warning-indicator';
+                    flame.title = 'CPU Throttled!';
+                    valueEl.appendChild(flame);
+                }
+            }
+        }
+
+        return item;
     },
 
     getDomDeviceSerial: function() {
@@ -465,6 +488,24 @@ Module.register('MMM-Pinfo', {
                 if (now - lastTime >= interval) {
                     this.lastWarningTimes[metricKey] = now;
                     this.showWarning(name, actualValue, checkValue);
+                }
+            }
+        }
+
+        if (this.status.DEVICE && this.status.DEVICE.throttled) {
+            const thr = this.status.DEVICE.throttled;
+            if (checks.UNDER_VOLTAGE && thr.underVoltage) {
+                const lastTime = this.lastWarningTimes['UNDER_VOLTAGE'] || 0;
+                if (now - lastTime >= interval) {
+                    this.lastWarningTimes['UNDER_VOLTAGE'] = now;
+                    this.showWarning("Power Supply", "Low Voltage Detected", "Check power adapter");
+                }
+            }
+            if (checks.THROTTLED && thr.currentlyThrottled) {
+                const lastTime = this.lastWarningTimes['THROTTLED'] || 0;
+                if (now - lastTime >= interval) {
+                    this.lastWarningTimes['THROTTLED'] = now;
+                    this.showWarning("CPU Status", "Throttled", "Check cooling / heat sink");
                 }
             }
         }

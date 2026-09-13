@@ -45,6 +45,23 @@
   text-align: center;
 }
 
+.Pinfo .warning-indicator {
+  margin-left: 6px;
+  font-size: 0.85em;
+  color: #f39c12;
+}
+
+.Pinfo .warning-indicator.danger {
+  color: #e74c3c;
+  animation: pinfo-pulse 1.5s infinite;
+}
+
+@keyframes pinfo-pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.35; }
+  100% { opacity: 1; }
+}
+
 .Pinfo .total {
   text-align: right;
   background-color: #333;

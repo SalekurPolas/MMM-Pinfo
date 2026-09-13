@@ -388,6 +388,18 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
         <td align=center><code>80</code></td>
         <td>Normal usage for STORAGE</td>
       </tr>
+      <tr>
+        <td><code>WARNING.check.UNDER_VOLTAGE</code></td>
+        <td align=center><code>boolean</code></td>
+        <td align=center><code>true</code></td>
+        <td>Alert and display indicator if Raspberry Pi power supply drops below threshold</td>
+      </tr>
+      <tr>
+        <td><code>WARNING.check.THROTTLED</code></td>
+        <td align=center><code>boolean</code></td>
+        <td align=center><code>true</code></td>
+        <td>Alert and display indicator if Raspberry Pi CPU frequency is throttled</td>
+      </tr>
     </tbody>
   </table>
 
@@ -476,7 +488,9 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
           CPU_TEMP: 65,
           CPU_USAGE: 75,
           RAM_USED: 80,
-          STORAGE_USED: 80
+          STORAGE_USED: 80,
+          UNDER_VOLTAGE: true,
+          THROTTLED: true
         }
       },
     }

@@ -162,6 +162,27 @@ helper.collectDynamicInfo().then(() => {
     assert.strictEqual(getLevel(null, -1), 0);
     console.log('✓ getLevel() clamped step calculations passed');
 
+    // test throttle bitmask decoder
+    const parseThrottle = (hex) => {
+        const code = parseInt(hex, 16);
+        return {
+            code,
+            underVoltage: Boolean(code & 0x1),
+            currentlyThrottled: Boolean(code & 0x4),
+            hasUnderVoltage: Boolean(code & 0x10000),
+            hasThrottled: Boolean(code & 0x40000)
+        };
+    };
+    const tNormal = parseThrottle('0x0');
+    assert.strictEqual(tNormal.underVoltage, false);
+    assert.strictEqual(tNormal.currentlyThrottled, false);
+
+    const tLowPower = parseThrottle('0x50005');
+    assert.strictEqual(tLowPower.underVoltage, true);
+    assert.strictEqual(tLowPower.currentlyThrottled, true);
+    assert.strictEqual(tLowPower.hasUnderVoltage, true);
+    console.log('✓ Pi throttle bitmask decoder passed');
+
     console.log('\n=============================================');
     console.log('ALL UNIT AND INTEGRATION CHECKS PASSED (100%)');
     console.log('=============================================');
