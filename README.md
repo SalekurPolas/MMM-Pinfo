@@ -108,6 +108,18 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
         <td>Size of the item's value container in px</td>
       </tr>
       <tr>
+        <td><code>showIcons</code></td>
+        <td align=center><code>boolean</code></td>
+        <td align=center><code>false</code></td>
+        <td>Display FontAwesome icons alongside item labels.</td>
+      </tr>
+      <tr>
+        <td><code>mount</code></td>
+        <td align=center><code>string</code></td>
+        <td align=center><code>null</code></td>
+        <td>Specific storage mount point to monitor (e.g. <code>'/'</code>, <code>'C:'</code>). Auto-detects primary partition if null.</td>
+      </tr>
+      <tr>
         <td><code>DEVICE.labelModel</code></td>
         <td align=center><code>string</code></td>
         <td align=center><code>'Model'</code></td>

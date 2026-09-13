@@ -8,6 +8,7 @@ module.exports = NodeHelper.create({
     start() {
         this.config = {};
         this.timer = null;
+        this.isSuspended = false;
 
         this.status = {
           DEVICE: {
@@ -37,159 +38,237 @@ module.exports = NodeHelper.create({
             temp: 0
           },
           UPTIME: 'unknown'
-        }
+        };
     },
 
     socketNotificationReceived(notification, payload) {
         if (notification === "CONFIG") {
             this.config = payload;
+            this.isSuspended = false;
             this.collectStaticInfo();
+        } else if (notification === "SUSPEND") {
+            this.isSuspended = true;
+            if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+            }
+        } else if (notification === "RESUME") {
+            if (this.isSuspended) {
+                this.isSuspended = false;
+                this.scheduler();
+            }
         }
     },
 
     async collectStaticInfo() {
-        await this.getDeviceInfo();
-        await this.getOSInfo();
-        await this.getCPUType();
+        await Promise.allSettled([
+            this.getDeviceInfo(),
+            this.getOSInfo(),
+            this.getCPUType()
+        ]);
         this.scheduler();
     },
 
     async scheduler() {
-        clearTimeout(this.timer);
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
 
-        await this.collectDynamicInfo(resolve => {
-            this.sendSocketNotification('STATUS', this.status);
-        });
+        if (this.isSuspended) {
+            return;
+        }
 
-        this.timer = setTimeout(() => {
-            this.scheduler();
-        }, this.config.refresh);
-    },
+        await this.collectDynamicInfo();
+        this.sendSocketNotification('STATUS', this.status);
 
-    async collectDynamicInfo(resolve) {
-        await this.getNetworkInfo();
-        await this.getMemoryInfo();
-        await this.getStorageInfo();
-        await this.getCPUInfo();
-        await this.getUptime();
-        resolve();
-    },
-
-    getUptime() {
-      this.status['UPTIME'] = this.convertTime(si.time().uptime)
-    },
-
-    async getDeviceInfo() {
-        await si.system().then(data => {
-            this.status['DEVICE'].model = data.model;
-            this.status['DEVICE'].serial = data.serial;
-        }).catch(error => {
-            Log.error(`Error while getting device info: ${error}`);
-        });
-    },
-
-    async getOSInfo() {
-        await si.osInfo().then(data => {
-            this.status['OS'] = data.distro.split(' ')[0] + " " + data.release + " (" + data.codename + ")";
-        }).catch(error => {
-            Log.error(`Error while getting OS info: ${error}`);
-        });
-    },
-
-    async getNetworkInfo() {
-        await si.networkInterfaceDefault().then(async defaultInt => {
-            await si.networkInterfaces().then(data => {
-                data.forEach(net => {
-                    if((net.iface != "lo") && (net.iface === defaultInt)) {
-                        this.status['NETWORK'].type = net.iface;
-                        this.status['NETWORK'].ipv4 = net.ip4;
-                        this.status['NETWORK'].ipv6 = net.ip6;
-                        this.status['NETWORK'].mac = net.mac;
-                    }
-                });
-            }).catch(error => {
-                Log.error(`Error while getting network interfaces: ${error}`);
-            });
-        }).catch(error => {
-            Log.error(`Error while getting default network interface: ${error}`);
-        });
-    },
-
-    async getMemoryInfo() {
-        await si.mem().then(data => {
-            this.status['MEMORY'].total = this.convert(data.total, 0);
-            this.status['MEMORY'].used = this.convert(data.used-data.buffcache, 2);
-            this.status['MEMORY'].percent = ((data.used-data.buffcache) / data.total * 100).toFixed(0);
-        }).catch(error => {
-            Log.error(`Error while getting memory info: ${error}`);
-        });
-    },
-
-    async getStorageInfo() {
-        await si.fsSize().then(data => {
-            data.forEach(partition => {
-                if(partition.mount === '/') {
-                    this.status['STORAGE'].total = this.convert(partition.size, 2);
-                    this.status['STORAGE'].used = this.convert(partition.used, 2);
-                    this.status['STORAGE'].percent = partition.use;
-                }
-            })
-        }).catch(error => {
-            Log.error(`Error while getting storage info: ${error}`);
-        });
-    },
-
-    async getCPUType() {
-        await si.cpu().then(data => {
-            this.status['CPU'].type = data.brand;
-        }).catch(error => {
-            Log.error(`Error while getting CPU type: ${error}`);
-        });
-    },
-
-    async getCPUInfo() {
-        await si.currentLoad().then(data => {
-            this.status['CPU'].usage = data.currentLoad.toFixed(0);
-        }).catch(error => {
-            Log.error(`Error while getting CPU usage: ${error}`);
-        });
-
-        await si.cpuTemperature().then(data => {
-            this.status['CPU'].temp = data.main.toFixed(1);
-        }).catch(error => {
-            Log.error(`Error while getting CPU temperature: ${error}`);
-        });
-    },
-
-    convert(octet, FixTo) {
-        octet = Math.abs(parseInt(octet, 10));
-        let def = [
-            [1, 'B'],
-            [1024, 'KB'],
-            [1024*1024, 'MB'],
-            [1024*1024*1024, 'GB'],
-            [1024*1024*1024*1024, 'TB']];
-
-        for(let i = 0; i < def.length; i++){
-            if(octet < def[i][0]) return (octet / def[i-1][0]).toFixed(FixTo) + def[i - 1][1];
+        if (!this.isSuspended) {
+            this.timer = setTimeout(() => {
+                this.scheduler();
+            }, this.config.refresh || 5000);
         }
     },
 
+    async collectDynamicInfo() {
+        await Promise.allSettled([
+            this.getNetworkInfo(),
+            this.getMemoryInfo(),
+            this.getStorageInfo(),
+            this.getCPUInfo(),
+            this.getUptime()
+        ]);
+    },
+
+    getUptime() {
+        try {
+            this.status['UPTIME'] = this.convertTime(si.time().uptime);
+        } catch (error) {
+            Log.error(`Error while getting uptime: ${error}`);
+        }
+    },
+
+    async getDeviceInfo() {
+        try {
+            const data = await si.system();
+            this.status['DEVICE'].model = data.model || 'unknown';
+            this.status['DEVICE'].serial = data.serial || 'unknown';
+        } catch (error) {
+            Log.error(`Error while getting device info: ${error}`);
+        }
+    },
+
+    async getOSInfo() {
+        try {
+            const data = await si.osInfo();
+            const distro = (data.distro || '').split(' ')[0];
+            const release = data.release || '';
+            const codename = data.codename ? ` (${data.codename})` : '';
+            this.status['OS'] = `${distro} ${release}${codename}`.trim() || 'unknown';
+        } catch (error) {
+            Log.error(`Error while getting OS info: ${error}`);
+        }
+    },
+
+    async getNetworkInfo() {
+        try {
+            const defaultInt = await si.networkInterfaceDefault().catch(() => null);
+            const data = await si.networkInterfaces();
+            if (Array.isArray(data)) {
+                let net = null;
+                if (defaultInt) {
+                    net = data.find(item => item.iface !== 'lo' && item.iface === defaultInt);
+                }
+                if (!net) {
+                    net = data.find(item => item.iface !== 'lo' && (item.ip4 || item.ip6));
+                }
+
+                if (net) {
+                    this.status['NETWORK'].type = net.iface || 'unknown';
+                    this.status['NETWORK'].ipv4 = net.ip4 || 'N/A';
+                    this.status['NETWORK'].ipv6 = net.ip6 || 'N/A';
+                    this.status['NETWORK'].mac = net.mac || 'unknown';
+                }
+            }
+        } catch (error) {
+            Log.error(`Error while getting network info: ${error}`);
+        }
+    },
+
+    async getMemoryInfo() {
+        try {
+            const data = await si.mem();
+            if (data && data.total > 0) {
+                const usedBytes = Math.max(0, (data.used || 0) - (data.buffcache || 0));
+                this.status['MEMORY'].total = this.convert(data.total, 0);
+                this.status['MEMORY'].used = this.convert(usedBytes, 2);
+                this.status['MEMORY'].percent = ((usedBytes / data.total) * 100).toFixed(0);
+            }
+        } catch (error) {
+            Log.error(`Error while getting memory info: ${error}`);
+        }
+    },
+
+    async getStorageInfo() {
+        try {
+            const data = await si.fsSize();
+            if (Array.isArray(data) && data.length > 0) {
+                const targetMount = this.config.mount || null;
+                let partition = null;
+
+                if (targetMount) {
+                    partition = data.find(p => p.mount && p.mount.toLowerCase() === targetMount.toLowerCase());
+                }
+
+                // Fallback 1: Linux root '/'
+                if (!partition) {
+                    partition = data.find(p => p.mount === '/');
+                }
+
+                // Fallback 2: Windows primary drive 'C:'
+                if (!partition) {
+                    partition = data.find(p => p.mount && p.mount.toUpperCase().startsWith('C:'));
+                }
+
+                // Fallback 3: First partition with non-zero size
+                if (!partition) {
+                    partition = data.find(p => p.size > 0);
+                }
+
+                if (partition) {
+                    this.status['STORAGE'].total = this.convert(partition.size, 2);
+                    this.status['STORAGE'].used = this.convert(partition.used, 2);
+                    this.status['STORAGE'].percent = typeof partition.use === 'number'
+                        ? partition.use
+                        : (partition.size > 0 ? Math.round((partition.used / partition.size) * 100) : 0);
+                }
+            }
+        } catch (error) {
+            Log.error(`Error while getting storage info: ${error}`);
+        }
+    },
+
+    async getCPUType() {
+        try {
+            const data = await si.cpu();
+            this.status['CPU'].type = data.brand || data.manufacturer || 'unknown';
+        } catch (error) {
+            Log.error(`Error while getting CPU type: ${error}`);
+        }
+    },
+
+    async getCPUInfo() {
+        try {
+            const load = await si.currentLoad();
+            if (load && typeof load.currentLoad === 'number') {
+                this.status['CPU'].usage = load.currentLoad.toFixed(0);
+            }
+        } catch (error) {
+            Log.error(`Error while getting CPU usage: ${error}`);
+        }
+
+        try {
+            const data = await si.cpuTemperature();
+            if (data && data.main !== null && data.main !== undefined && !isNaN(data.main) && data.main >= 0) {
+                this.status['CPU'].temp = Number(data.main).toFixed(1);
+            } else {
+                this.status['CPU'].temp = 0;
+            }
+        } catch (error) {
+            Log.error(`Error while getting CPU temperature: ${error}`);
+            this.status['CPU'].temp = 0;
+        }
+    },
+
+    convert(octet, FixTo = 2) {
+        if (octet === null || octet === undefined || isNaN(octet)) return '0B';
+        octet = Math.abs(parseInt(octet, 10));
+        if (octet === 0) return '0B';
+
+        const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        let unitIndex = 0;
+        let value = octet;
+
+        while (value >= 1024 && unitIndex < units.length - 1) {
+            value /= 1024;
+            unitIndex++;
+        }
+
+        return (unitIndex === 0 ? value : value.toFixed(FixTo)) + units[unitIndex];
+    },
+
     convertTime(seconds) {
-	  let humanTime;
-      if (seconds > 60*60*24) {
-        humanTime = Math.round(seconds/(60*60*24), 0) + ' days'
-      }
-      else if (seconds > 60*60) {
-        humanTime = Math.round(seconds/(60*60), 0) + ' hours'
-      }
-      else if (seconds > 60) {
-        humanTime = Math.round(seconds/60, 0) + ' minutes'
-      }
-      else {
-        humanTime = Math.round(seconds, 0) + ' seconds'
-      }
-      return humanTime
+        if (typeof seconds !== 'number' || isNaN(seconds) || seconds < 0) return '0 seconds';
+        let humanTime;
+        if (seconds > 60*60*24) {
+            humanTime = Math.round(seconds/(60*60*24)) + ' days';
+        } else if (seconds > 60*60) {
+            humanTime = Math.round(seconds/(60*60)) + ' hours';
+        } else if (seconds > 60) {
+            humanTime = Math.round(seconds/60) + ' minutes';
+        } else {
+            humanTime = Math.round(seconds) + ' seconds';
+        }
+        return humanTime;
     },
 
 });

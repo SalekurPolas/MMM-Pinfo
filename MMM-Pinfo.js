@@ -9,6 +9,24 @@ Module.register('MMM-Pinfo', {
         labelSize: null,
         containerSize: null,
         header: 'Mirror Information',
+        units: null,
+        showIcons: false,
+        mount: null,
+        icons: {
+            model: 'fas fa-desktop',
+            serial: 'fas fa-barcode',
+            os: 'fas fa-compact-disc',
+            netType: 'fas fa-network-wired',
+            ipv4: 'fas fa-globe',
+            ipv6: 'fas fa-globe-americas',
+            mac: 'fas fa-ethernet',
+            ram: 'fas fa-memory',
+            storage: 'fas fa-hdd',
+            cpuType: 'fas fa-microchip',
+            cpuUsage: 'fas fa-tachometer-alt',
+            cpuTemp: 'fas fa-thermometer-half',
+            uptime: 'fas fa-clock'
+        },
 
         DEVICE: {
             labelModel: "Model",
@@ -84,6 +102,7 @@ Module.register('MMM-Pinfo', {
     start: function() {
         this.item = 0;
         this.container = 0;
+        this.lastWarningTimes = {};
 
         this.status = {
             DEVICE: {
@@ -113,13 +132,13 @@ Module.register('MMM-Pinfo', {
                 temp: 0
             },
             UPTIME: 'Loading...',
-        }
+        };
 
         this.config = this.merge({}, this.defaults, this.config);
 
-        if(this.data.position === 'top_left' || this.data.position === 'bottom_left') {
+        if (this.data.position === 'top_left' || this.data.position === 'bottom_left') {
             this.config.itemAlign = 'flex-start';
-        } else if(this.data.position === 'top_right' || this.data.position === 'bottom_right') {
+        } else if (this.data.position === 'top_right' || this.data.position === 'bottom_right') {
             this.config.itemAlign = 'flex-end';
         } else {
             this.config.header = null;
@@ -131,12 +150,14 @@ Module.register('MMM-Pinfo', {
 
     suspend: function() {
         this.hidden = true;
-        Log.log("[ " + this.name + " ] " + " is suspended.");
+        this.sendSocketNotification('SUSPEND');
+        Log.log("[ " + this.name + " ] is suspended.");
     },
 
     resume: function() {
         this.hidden = false;
-        Log.log("[ " + this.name + " ] " + " is resumed.");
+        this.sendSocketNotification('RESUME');
+        Log.log("[ " + this.name + " ] is resumed.");
     },
 
     getStyles: function () {
@@ -144,7 +165,7 @@ Module.register('MMM-Pinfo', {
     },
 
     getHeader: function() {
-        if(this.config.header) {
+        if (this.config.header) {
             return this.data.header ? this.data.header : this.config.header;
         } else {
             return null;
@@ -171,17 +192,26 @@ Module.register('MMM-Pinfo', {
         return wrapper;
     },
 
-    getDomDeviceModel: function() {
+    createItemElement: function(order, labelText, valueText, iconKey) {
         let wrapper = document.createElement("div");
         wrapper.className = "item";
-        wrapper.style.order = this.config.DEVICE.orderModel;
+        wrapper.style.order = order;
         wrapper.style.justifyContent = this.config.itemAlign;
 
         let label = document.createElement("div");
         label.className = "label";
         label.style.width = this.labelSize + "px";
         label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.DEVICE.labelModel;
+
+        if (this.config.showIcons && iconKey && this.config.icons && this.config.icons[iconKey]) {
+            let icon = document.createElement("i");
+            icon.className = this.config.icons[iconKey] + " item-icon";
+            label.appendChild(icon);
+        }
+
+        let labelSpan = document.createElement("span");
+        labelSpan.textContent = labelText;
+        label.appendChild(labelSpan);
 
         let container = document.createElement("div");
         container.className = "container";
@@ -189,430 +219,242 @@ Module.register('MMM-Pinfo', {
 
         let value = document.createElement("div");
         value.className = "value";
-        value.innerHTML = this.status['DEVICE'].model;
+        value.textContent = valueText;
         value.style.textAlign = this.config.valueAlign;
 
-        if (this.config.DEVICE.labelModel.length > this.item) this.item = this.config.DEVICE.labelModel.length;
-        if (this.status['DEVICE'].model.length > this.container) this.container = this.status['DEVICE'].model.length;
+        if (labelText && labelText.length > this.item) this.item = labelText.length;
+        if (valueText && String(valueText).length > this.container) this.container = String(valueText).length;
 
         container.appendChild(value);
         wrapper.appendChild(label);
         wrapper.appendChild(container);
         return wrapper;
+    },
+
+    createBarItemElement: function(order, labelText, totalContent, usedContent, percentValue, iconKey) {
+        let wrapper = document.createElement("div");
+        wrapper.className = "item";
+        wrapper.style.order = order;
+        wrapper.style.justifyContent = this.config.itemAlign;
+
+        let label = document.createElement("div");
+        label.className = "label";
+        label.style.width = this.labelSize + "px";
+        label.style.textAlign = this.config.labelAlign;
+
+        if (this.config.showIcons && iconKey && this.config.icons && this.config.icons[iconKey]) {
+            let icon = document.createElement("i");
+            icon.className = this.config.icons[iconKey] + " item-icon";
+            label.appendChild(icon);
+        }
+
+        let labelSpan = document.createElement("span");
+        labelSpan.textContent = labelText;
+        label.appendChild(labelSpan);
+
+        let container = document.createElement("div");
+        container.className = "container";
+        container.style.width = this.containerSize + "px";
+
+        let total = document.createElement("div");
+        total.className = "total";
+        if (typeof totalContent === 'string') {
+            total.innerHTML = totalContent;
+        } else if (totalContent !== null && totalContent !== undefined) {
+            total.textContent = totalContent;
+        }
+
+        let used = document.createElement("div");
+        used.style.opacity = "0.75";
+        const clampedPercent = Math.max(0, Math.min(100, Math.round(percentValue || 0)));
+        used.style.width = clampedPercent + "%";
+        if (usedContent) {
+            used.innerHTML = usedContent;
+        }
+
+        let step = this.getLevel(percentValue, -1);
+        used.className = "bar step" + step;
+
+        if (labelText && labelText.length > this.item) this.item = labelText.length;
+
+        total.appendChild(used);
+        container.appendChild(total);
+        wrapper.appendChild(label);
+        wrapper.appendChild(container);
+        return wrapper;
+    },
+
+    getDomDeviceModel: function() {
+        return this.createItemElement(
+            this.config.DEVICE.orderModel,
+            this.config.DEVICE.labelModel,
+            this.status.DEVICE.model,
+            'model'
+        );
     },
 
     getDomDeviceSerial: function() {
-        let wrapper = document.createElement("div");
-        wrapper.className = "item";
-        wrapper.style.justifyContent = this.config.itemAlign;
-        wrapper.style.order = this.config.DEVICE.orderSerial;
-
-        let label = document.createElement("div");
-        label.className = "label";
-        label.style.width = this.labelSize + "px";
-        label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.DEVICE.labelSerial;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let value = document.createElement("div");
-        value.className = "value";
-        value.innerHTML = this.status['DEVICE'].serial;
-        value.style.textAlign = this.config.valueAlign;
-
-        if (this.config.DEVICE.labelSerial.length > this.item) this.item = this.config.DEVICE.labelSerial.length;
-        if (this.status['DEVICE'].serial.length > this.container) this.container = this.status['DEVICE'].serial.length;
-
-        container.appendChild(value);
-        wrapper.appendChild(label);
-        wrapper.appendChild(container);
-        return wrapper;
+        return this.createItemElement(
+            this.config.DEVICE.orderSerial,
+            this.config.DEVICE.labelSerial,
+            this.status.DEVICE.serial,
+            'serial'
+        );
     },
 
     getDomOS: function() {
-        let wrapper = document.createElement("div");
-        wrapper.className = "item";
-        wrapper.style.justifyContent = this.config.itemAlign;
-        wrapper.style.order = this.config.OS.orderOs;
-
-        let label = document.createElement("div");
-        label.className = "label";
-        label.style.width = this.labelSize + "px";
-        label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.OS.labelOs;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let value = document.createElement("div");
-        value.className = "value";
-        value.innerHTML = this.status['OS'];
-        value.style.textAlign = this.config.valueAlign;
-
-        if (this.config.OS.labelOs.length > this.item) this.item = this.config.OS.labelOs.length;
-        if (this.status['OS'].length > this.container) this.container = this.status['OS'].length;
-
-        container.appendChild(value);
-        wrapper.appendChild(label);
-        wrapper.appendChild(container);
-        return wrapper;
+        return this.createItemElement(
+            this.config.OS.orderOs,
+            this.config.OS.labelOs,
+            this.status.OS,
+            'os'
+        );
     },
 
     getDomNetworkType: function() {
-        let wrapper = document.createElement("div");
-        wrapper.className = "item";
-        wrapper.style.justifyContent = this.config.itemAlign;
-        wrapper.style.order = this.config.NETWORK.orderType;
-
-        let label = document.createElement("div");
-        label.className = "label";
-        label.style.width = this.labelSize + "px";
-        label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.NETWORK.labelType;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let value = document.createElement("div");
-        value.className = "value";
-        value.innerHTML = this.status['NETWORK'].type;
-        value.style.textAlign = this.config.valueAlign;
-
-        if (this.config.NETWORK.labelType.length > this.item) this.item = this.config.NETWORK.labelType.length;
-        if (this.status['NETWORK'].type.length > this.container) this.container = this.status['NETWORK'].type.length;
-
-        container.appendChild(value);
-        wrapper.appendChild(label);
-        wrapper.appendChild(container);
-        return wrapper;
+        return this.createItemElement(
+            this.config.NETWORK.orderType,
+            this.config.NETWORK.labelType,
+            this.status.NETWORK.type,
+            'netType'
+        );
     },
 
     getDomNetworkIPv4: function() {
-        let wrapper = document.createElement("div");
-        wrapper.className = "item";
-        wrapper.style.justifyContent = this.config.itemAlign;
-        wrapper.style.order = this.config.NETWORK.orderIPv4;
-
-        let label = document.createElement("div");
-        label.className = "label";
-        label.style.width = this.labelSize + "px";
-        label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.NETWORK.labelIPv4;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let value = document.createElement("div");
-        value.className = "value";
-        value.innerHTML = this.status['NETWORK'].ipv4;
-        value.style.textAlign = this.config.valueAlign;
-
-        if (this.config.NETWORK.labelIPv4.length > this.item) this.item = this.config.NETWORK.labelIPv4.length;
-        if (this.status['NETWORK'].ipv4.length > this.container) this.container = this.status['NETWORK'].ipv4.length;
-
-        container.appendChild(value);
-        wrapper.appendChild(label);
-        wrapper.appendChild(container);
-        return wrapper;
+        return this.createItemElement(
+            this.config.NETWORK.orderIPv4,
+            this.config.NETWORK.labelIPv4,
+            this.status.NETWORK.ipv4,
+            'ipv4'
+        );
     },
 
     getDomNetworkIPv6: function() {
-        let wrapper = document.createElement("div");
-        wrapper.className = "item";
-        wrapper.style.justifyContent = this.config.itemAlign;
-        wrapper.style.order = this.config.NETWORK.orderIPv6;
-
-        let label = document.createElement("div");
-        label.className = "label";
-        label.style.width = this.labelSize + "px";
-        label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.NETWORK.labelIPv6;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let value = document.createElement("div");
-        value.className = "value";
-        value.innerHTML = this.status['NETWORK'].ipv6;
-        value.style.textAlign = this.config.valueAlign;
-
-        if (this.config.NETWORK.labelIPv6.length > this.item) this.item = this.config.NETWORK.labelIPv6.length;
-        if (this.status['NETWORK'].ipv6.length > this.container) this.container = this.status['NETWORK'].ipv6.length;
-
-        container.appendChild(value);
-        wrapper.appendChild(label);
-        wrapper.appendChild(container);
-        return wrapper;
+        return this.createItemElement(
+            this.config.NETWORK.orderIPv6,
+            this.config.NETWORK.labelIPv6,
+            this.status.NETWORK.ipv6,
+            'ipv6'
+        );
     },
 
     getDomNetworkMac: function() {
-        let wrapper = document.createElement("div");
-        wrapper.className = "item";
-        wrapper.style.justifyContent = this.config.itemAlign;
-        wrapper.style.order = this.config.NETWORK.orderMac;
-
-        let label = document.createElement("div");
-        label.className = "label";
-        label.style.width = this.labelSize + "px";
-        label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.NETWORK.labelMac;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let value = document.createElement("div");
-        value.className = "value";
-        value.innerHTML = this.status['NETWORK'].mac;
-        value.style.textAlign = this.config.valueAlign;
-
-        if (this.config.NETWORK.labelMac.length > this.item) this.item = this.config.NETWORK.labelMac.length;
-        if (this.status['NETWORK'].mac.length > this.container) this.container = this.status['NETWORK'].mac.length;
-
-        container.appendChild(value);
-        wrapper.appendChild(label);
-        wrapper.appendChild(container);
-        return wrapper;
+        return this.createItemElement(
+            this.config.NETWORK.orderMac,
+            this.config.NETWORK.labelMac,
+            this.status.NETWORK.mac,
+            'mac'
+        );
     },
 
     getDomCPUType: function() {
-        let wrapper = document.createElement("div");
-        wrapper.className = "item";
-        wrapper.style.justifyContent = this.config.itemAlign;
-        wrapper.style.order = this.config.CPU.orderType;
-
-        let label = document.createElement("div");
-        label.className = "label";
-        label.style.width = this.labelSize + "px";
-        label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.CPU.labelType;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let value = document.createElement("div");
-        value.className = "value";
-        value.innerHTML = this.status['CPU'].type;
-        value.style.textAlign = this.config.valueAlign;
-
-        if (this.config.CPU.labelType.length > this.item) this.item = this.config.CPU.labelType.length;
-        if (this.status['CPU'].type.length > this.container) this.container = this.status['CPU'].type.length;
-
-        container.appendChild(value);
-        wrapper.appendChild(label);
-        wrapper.appendChild(container);
-        return wrapper;
+        return this.createItemElement(
+            this.config.CPU.orderType,
+            this.config.CPU.labelType,
+            this.status.CPU.type,
+            'cpuType'
+        );
     },
 
-    getDomUptime : function() {
-      let wrapper = document.createElement("div");
-      wrapper.className = "item";
-      wrapper.style.justifyContent = this.config.itemAlign;
-      wrapper.style.order = this.config.UPTIME.orderUptime;
-
-      let label = document.createElement("div");
-      label.className = "label";
-      label.style.width = this.labelSize + "px";
-      label.style.textAlign = this.config.labelAlign;
-      label.innerHTML = this.config.UPTIME.labelUptime;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let value = document.createElement("div");
-        value.className = "value";
-        value.innerHTML = this.status['UPTIME'];
-        value.style.textAlign = this.config.valueAlign;
-
-        if (this.config.UPTIME.labelUptime.length > this.item) this.item = this.config.UPTIME.labelUptime.length;
-        if (this.status['UPTIME'].length > this.container) this.container = this.status['UPTIME'].length;
-
-        container.appendChild(value);
-        wrapper.appendChild(label);
-        wrapper.appendChild(container);
-      return wrapper;
+    getDomUptime: function() {
+        return this.createItemElement(
+            this.config.UPTIME.orderUptime,
+            this.config.UPTIME.labelUptime,
+            this.status.UPTIME,
+            'uptime'
+        );
     },
 
-    getDomCPUTemp : function() {
-        let wrapper = document.createElement("div");
-        wrapper.className = "item";
-        wrapper.style.justifyContent = this.config.itemAlign;
-        wrapper.style.order = this.config.CPU.orderTemp;
-
-        let label = document.createElement("div");
-        label.className = "label";
-        label.style.width = this.labelSize + "px";
-        label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.CPU.labelTemp;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let total = document.createElement("div");
-        total.className = "total";
-        if (config.units === 'imperial') {
-          total.innerHTML = Math.round(this.status['CPU'].temp * 9/5 + 32, 0) + '\°F';
-        }
-        else {
-          total.innerHTML = this.status['CPU'].temp + '\°C';
+    getDomCPUTemp: function() {
+        const rawTemp = parseFloat(this.status.CPU.temp) || 0;
+        let units = this.config.units;
+        if (!units && typeof config !== 'undefined' && config.units) {
+            units = config.units;
         }
 
-        let used = document.createElement("div");
-        used.style.opacity = 0.75;
-        used.style.width = this.status['CPU'].temp + "%";
+        let tempText;
+        if (units === 'imperial') {
+            tempText = Math.round(rawTemp * 9/5 + 32) + '°F';
+        } else {
+            tempText = rawTemp.toFixed(1) + '°C';
+        }
 
-        let step = this.getLevel(this.status['CPU'].temp, -1);
-        step > 100 ? step = 100 : step = step;
-        used.className = "bar step" + step;
-
-        if (this.config.CPU.labelTemp.length > this.item) this.item = this.config.CPU.labelTemp.length;
-
-        total.appendChild(used);
-        container.appendChild(total);
-        wrapper.appendChild(label);
-        wrapper.appendChild(container);
-        return wrapper;
+        return this.createBarItemElement(
+            this.config.CPU.orderTemp,
+            this.config.CPU.labelTemp,
+            tempText,
+            '',
+            rawTemp,
+            'cpuTemp'
+        );
     },
 
-    getDomCPUUsage : function() {
-        let wrapper = document.createElement("div");
-        wrapper.className = "item";
-        wrapper.style.justifyContent = this.config.itemAlign;
-        wrapper.style.order = this.config.CPU.orderUsage;
-
-        let label = document.createElement("div");
-        label.className = "label";
-        label.style.width = this.labelSize + "px";
-        label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.CPU.labelUsage;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let total = document.createElement("div");
-        total.className = "total";
-        total.innerHTML = " &nbsp;";
-
-        let used = document.createElement("div");
-        used.style.opacity = 0.75;
-        used.innerHTML = this.status["CPU"].usage + "%";
-        used.style.width = Math.round(this.status['CPU'].usage) + "%";
-
-        let step = this.getLevel(this.status["CPU"].usage, -1);
-        step > 100 ? step = 100 : step = step;
-        used.className = "bar step" + step;
-
-        if (this.config.CPU.labelUsage.length > this.item ) this.item = this.config.CPU.labelUsage.length;
-
-        total.appendChild(used);
-        container.appendChild(total);
-        wrapper.appendChild(label);
-        wrapper.appendChild(container);
-        return wrapper
+    getDomCPUUsage: function() {
+        const usage = parseFloat(this.status.CPU.usage) || 0;
+        return this.createBarItemElement(
+            this.config.CPU.orderUsage,
+            this.config.CPU.labelUsage,
+            " &nbsp;",
+            Math.round(usage) + "%",
+            usage,
+            'cpuUsage'
+        );
     },
 
-    getDomMemory : function () {
-        let wrapper = document.createElement("div");
-        wrapper.className = "item";
-        wrapper.style.justifyContent = this.config.itemAlign;
-        wrapper.style.order = this.config.RAM.orderRam;
-
-        let label = document.createElement("div");
-        label.className = "label";
-        label.style.width = this.labelSize + "px";
-        label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.RAM.labelRam;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let total = document.createElement("div");
-        total.className = "total";
-        total.innerHTML = this.status["MEMORY"].total;
-
-        let used = document.createElement("div");
-        used.style.width = Math.round(this.status["MEMORY"].percent) + "%";
-        used.innerHTML = this.status["MEMORY"].used;
-
-        let step = this.getLevel(this.status["MEMORY"].percent, -1);
-        step > 100 ? step = 100 : step = step;
-        used.className = "bar step" + step;
-        used.style.opacity = 0.75;
-
-        if (this.config.RAM.labelRam.length > this.item ) this.item = this.config.RAM.labelRam.length;
-
-        total.appendChild(used)
-        container.appendChild(total)
-        wrapper.appendChild(label)
-        wrapper.appendChild(container)
-        return wrapper;
+    getDomMemory: function() {
+        const percent = parseFloat(this.status.MEMORY.percent) || 0;
+        return this.createBarItemElement(
+            this.config.RAM.orderRam,
+            this.config.RAM.labelRam,
+            this.status.MEMORY.total,
+            this.status.MEMORY.used,
+            percent,
+            'ram'
+        );
     },
 
-    getDomStorage : function () {
-        let wrapper = document.createElement("div");
-        wrapper.className = "item";
-        wrapper.style.justifyContent = this.config.itemAlign;
-        wrapper.style.order = this.config.STORAGE.orderStorage;
-
-        let label = document.createElement("div");
-        label.className = "label";
-        label.style.width = this.labelSize + "px";
-        label.style.textAlign = this.config.labelAlign;
-        label.innerHTML = this.config.STORAGE.labelStorage;
-
-        let container = document.createElement("div");
-        container.className = "container";
-        container.style.width = this.containerSize + "px";
-
-        let total = document.createElement("div");
-        total.className = "total";
-        total.innerHTML = this.status["STORAGE"].total;
-
-        let used = document.createElement("div");
-        used.style.width = Math.round(this.status["STORAGE"].percent) + "%";
-        used.innerHTML = this.status["STORAGE"].used;
-
-        let step = this.getLevel(this.status["STORAGE"].percent, -1);
-        step > 100 ? step = 100 : step = step;
-        used.className = "bar step" + step;
-        used.style.opacity = 0.75;
-
-        if (this.config.STORAGE.labelStorage.length > this.item ) this.item = this.config.STORAGE.labelStorage.length;
-
-        total.appendChild(used)
-        container.appendChild(total)
-        wrapper.appendChild(label)
-        wrapper.appendChild(container)
-        return wrapper;
+    getDomStorage: function() {
+        const percent = parseFloat(this.status.STORAGE.percent) || 0;
+        return this.createBarItemElement(
+            this.config.STORAGE.orderStorage,
+            this.config.STORAGE.labelStorage,
+            this.status.STORAGE.total,
+            this.status.STORAGE.used,
+            percent,
+            'storage'
+        );
     },
 
-    checkWarning : function() {
-        if(this.config.WARNING.enable) {
-            for(let name in this.config.WARNING.check) {
-                let checkValue = this.config.WARNING.check[name];
-                if(name == "CPU_TEMP") {
-                    let actualValue = parseFloat(this.status["CPU"].temp);
-                    if(checkValue < actualValue) this.showWarning(name, actualValue, checkValue);
-                } else if(name == "CPU_USAGE") {
-                    let actualValue = parseFloat(this.status["CPU"].usage);
-                    if(checkValue < actualValue) this.showWarning(name, actualValue, checkValue);
-                } else if(name == "MEMORY_USED") {
-                    let actualValue = parseFloat(this.status["MEMORY"].percent);
-                    if(checkValue < actualValue) this.showWarning(name, actualValue, checkValue);
-                } else if(name == "STORAGE_USED") {
-                    let actualValue = parseFloat(this.status["STORAGE"].percent);
-                    if(checkValue < actualValue) this.showWarning(name, actualValue, checkValue);
+    checkWarning: function() {
+        if (!this.config.WARNING || !this.config.WARNING.enable) return;
+
+        const interval = typeof this.config.WARNING.interval === 'number'
+            ? this.config.WARNING.interval
+            : 1000 * 60 * 5;
+        const now = Date.now();
+
+        const checks = this.config.WARNING.check || {};
+        for (let name in checks) {
+            const checkValue = checks[name];
+            let actualValue = null;
+            let metricKey = name;
+
+            if (name === "CPU_TEMP") {
+                actualValue = parseFloat(this.status.CPU.temp);
+            } else if (name === "CPU_USAGE") {
+                actualValue = parseFloat(this.status.CPU.usage);
+            } else if (name === "RAM_USED" || name === "MEMORY_USED") {
+                actualValue = parseFloat(this.status.MEMORY.percent);
+                metricKey = "RAM_USED";
+            } else if (name === "STORAGE_USED") {
+                actualValue = parseFloat(this.status.STORAGE.percent);
+            }
+
+            if (actualValue !== null && !isNaN(actualValue) && actualValue > checkValue) {
+                const lastTime = this.lastWarningTimes[metricKey] || 0;
+                if (now - lastTime >= interval) {
+                    this.lastWarningTimes[metricKey] = now;
+                    this.showWarning(name, actualValue, checkValue);
                 }
             }
         }
@@ -627,9 +469,13 @@ Module.register('MMM-Pinfo', {
     },
 
     getLevel: function(number, precision) {
+        if (isNaN(number) || number === null || number === undefined) return 0;
         let factor = Math.pow(10, precision);
-        let tempNumber = Math.round(number * factor);
-        return tempNumber / factor;
+        let tempNumber = Math.round(Number(number) * factor);
+        let level = tempNumber / factor;
+        if (level < 0) return 0;
+        if (level > 100) return 100;
+        return level;
     },
 
     notificationReceived: function(notification, payload, sender) {
@@ -643,9 +489,9 @@ Module.register('MMM-Pinfo', {
             this.status = payload;
             this.checkWarning();
 
-        this.config.containerSize ? this.containerSize = this.config.containerSize : this.containerSize = (this.container * 7) + 10;
-        this.config.labelSize ? this.labelSize = this.config.labelSize : this.labelSize = (this.item * 7) + 10;
-        this.updateDom();
+            this.config.containerSize ? this.containerSize = this.config.containerSize : this.containerSize = (this.container * 7) + 10;
+            this.config.labelSize ? this.labelSize = this.config.labelSize : this.labelSize = (this.item * 7) + 10;
+            this.updateDom();
         }
     },
 

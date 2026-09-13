@@ -22,6 +22,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+.Pinfo .item .label .item-icon {
+  margin-right: 6px;
+  width: 1.1em;
+  text-align: center;
+  opacity: 0.85;
 }
 
 .Pinfo .item .container {
@@ -31,7 +40,6 @@
 }
 
 .Pinfo .item .container .value {
-  /* overflow: hidden; */
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
@@ -51,6 +59,7 @@
   background-color: #369;
   overflow: visible;
   height: 100%;
+  transition: width 0.4s ease-in-out;
 }
 
 .Pinfo .bar.step0 {
