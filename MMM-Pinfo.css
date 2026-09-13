@@ -170,3 +170,54 @@
   background-color: #ffffff;
   box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
 }
+
+/* Compact Badge Layout (Inline horizontal pill chips) */
+.Pinfo.layout-compact {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.Pinfo.layout-compact .item {
+  height: auto;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 3px 8px;
+  align-items: center;
+  font-size: 0.85em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.Pinfo.layout-compact .item .label {
+  padding-right: 5px;
+  color: #81d4fa;
+  width: auto !important;
+}
+
+.Pinfo.layout-compact .item .container {
+  width: auto !important;
+  display: flex;
+  align-items: center;
+}
+
+.Pinfo.layout-compact .item .container .value {
+  display: inline;
+}
+
+.Pinfo.layout-compact .item .total {
+  display: inline-block;
+  width: 45px;
+  height: 8px;
+  vertical-align: middle;
+  margin-left: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  font-size: 0;
+}
+
+.Pinfo.layout-compact .item .total .bar {
+  border-radius: 4px;
+}

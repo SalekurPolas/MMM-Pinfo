@@ -12,6 +12,7 @@ Module.register('MMM-Pinfo', {
         units: null,
         showIcons: false,
         theme: 'default',
+        layout: 'default',
         mount: null,
         icons: {
             model: 'fas fa-desktop',
@@ -190,6 +191,10 @@ Module.register('MMM-Pinfo', {
         const activeTheme = this.config.theme || this.config.colorScheme;
         if (activeTheme && activeTheme !== 'default') {
             wrapper.classList.add("theme-" + activeTheme);
+        }
+
+        if (this.config.layout && this.config.layout !== 'default') {
+            wrapper.classList.add("layout-" + this.config.layout);
         }
 
         if (this.config.DEVICE.displayModel) wrapper.appendChild(this.getDomDeviceModel());

@@ -121,6 +121,12 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
         <td>Progress bar color theme: <code>'default'</code> (purple/blue), <code>'trafficLight'</code> (green/amber/red), or <code>'monochrome'</code> (clean silver/white).</td>
       </tr>
       <tr>
+        <td><code>layout</code></td>
+        <td align=center><code>string</code></td>
+        <td align=center><code>'default'</code></td>
+        <td>Display layout style: <code>'default'</code> (classic vertical stacked rows) or <code>'compact'</code> (modern inline badge/pill chips).</td>
+      </tr>
+      <tr>
         <td><code>mount</code></td>
         <td align=center><code>string</code></td>
         <td align=center><code>null</code></td>
@@ -449,6 +455,7 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
       containerSize: null,
       showIcons: false,
       theme: 'default',
+      layout: 'default',
       mount: null,
 
       DEVICE: {
