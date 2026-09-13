@@ -41,6 +41,7 @@ npm install
 | IPv4            | Display IPv4 of the corresponding network
 | IPv6            | Display IPv6 of the corresponding network
 | MAC             | Display MAC address of the corresponding network
+| Ping            | Display internet ping roundtrip latency (ms) or offline status
 | RAM             | Display total size, usage, and percentage usage of the RAM
 | Storage         | Display total size, usage, and percentage usage of the Storage
 | CPU type        | Display CPU type of the device
@@ -250,6 +251,30 @@ To setup `MMM-Pinfo` module in MagicMirror², add the following section to the `
         <td align=center><code>number</code></td>
         <td align=center><code>7</code></td>
         <td>Order of MAC</td>
+      </tr>
+      <tr>
+        <td><code>NETWORK.labelPing</code></td>
+        <td align=center><code>string</code></td>
+        <td align=center><code>'Ping'</code></td>
+        <td>Label of Ping</td>
+      </tr>
+      <tr>
+        <td><code>NETWORK.displayPing</code></td>
+        <td align=center><code>boolean</code></td>
+        <td align=center><code>false</code></td>
+        <td>Display internet latency ping</td>
+      </tr>
+      <tr>
+        <td><code>NETWORK.orderPing</code></td>
+        <td align=center><code>number</code></td>
+        <td align=center><code>7.5</code></td>
+        <td>Order of Ping</td>
+      </tr>
+      <tr>
+        <td><code>NETWORK.pingHost</code></td>
+        <td align=center><code>string</code></td>
+        <td align=center><code>null</code></td>
+        <td>Target host or IP to ping (defaults to systeminformation default)</td>
       </tr>
       <tr>
         <td><code>RAM.labelRam</code></td>

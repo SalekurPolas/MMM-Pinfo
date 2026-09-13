@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   * Added `theme: 'default'` supporting `'trafficLight'` (intuitive Green $\rightarrow$ Amber $\rightarrow$ Red heat levels) and `'monochrome'` (minimalist silver/white for clean B&W mirrors).
 * **Raspberry Pi Under-Voltage & Throttle Detection**:
   * Added hardware-level health monitoring via `vcgencmd get_throttled` detecting power supply voltage drops and CPU throttling. Displays visual indicators (`⚡` / `🔥`) and triggers notifications before power instability crashes the Pi. (Safely ignored on non-Pi platforms).
+* **Network Ping & Connectivity Status**:
+  * Added opt-in `NETWORK.displayPing: false` to display real-time roundtrip internet latency (`ms`) or `Offline` status with optional custom target host (`NETWORK.pingHost`). Only queries latency if enabled to preserve network resources.
 
 ### Fixed
 * **Storage Drive Formatting Crash ($\ge 1\text{ TB}$ and $0\text{ B}$)**:

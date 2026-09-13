@@ -63,6 +63,15 @@ helper.collectDynamicInfo().then(() => {
     assert(typeof helper.status.CPU.temp !== 'undefined');
     console.log('✓ Dynamic data collection passed');
 
+    // test network ping
+    console.log('Testing getNetworkPing()...');
+    helper.config = { NETWORK: { displayPing: true } };
+    return helper.getNetworkPing();
+}).then(() => {
+    console.log('Network ping result:', helper.status.NETWORK.ping);
+    assert(helper.status.NETWORK.ping.endsWith('ms') || helper.status.NETWORK.ping === 'Offline');
+    console.log('✓ Network ping check passed');
+
     // test warning logic
     console.log('\n--- Testing warning debounce logic ---');
     const mockModule = {
@@ -173,6 +182,7 @@ helper.collectDynamicInfo().then(() => {
             hasThrottled: Boolean(code & 0x40000)
         };
     };
+    
     const tNormal = parseThrottle('0x0');
     assert.strictEqual(tNormal.underVoltage, false);
     assert.strictEqual(tNormal.currentlyThrottled, false);

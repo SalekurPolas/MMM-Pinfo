@@ -21,6 +21,7 @@ Module.register('MMM-Pinfo', {
             ipv4: 'fas fa-globe',
             ipv6: 'fas fa-globe-americas',
             mac: 'fas fa-ethernet',
+            netPing: 'fas fa-signal',
             ram: 'fas fa-memory',
             storage: 'fas fa-hdd',
             cpuType: 'fas fa-microchip',
@@ -58,7 +59,12 @@ Module.register('MMM-Pinfo', {
 
             labelMac: 'MAC',
             displayMac: false,
-            orderMac: 7
+            orderMac: 7,
+
+            labelPing: 'Ping',
+            displayPing: false,
+            orderPing: 7.5,
+            pingHost: null
         },
         RAM: {
             labelRam: 'RAM',
@@ -118,7 +124,8 @@ Module.register('MMM-Pinfo', {
                 type: 'Loading...',
                 ipv4: 'Loading...',
                 ipv6: 'Loading...',
-                mac: 'Loading...'
+                mac: 'Loading...',
+                ping: 'Loading...'
             },
             MEMORY: {
                 total: 0,
@@ -192,6 +199,7 @@ Module.register('MMM-Pinfo', {
         if (this.config.NETWORK.displayIPv4) wrapper.appendChild(this.getDomNetworkIPv4());
         if (this.config.NETWORK.displayIPv6) wrapper.appendChild(this.getDomNetworkIPv6());
         if (this.config.NETWORK.displayMac) wrapper.appendChild(this.getDomNetworkMac());
+        if (this.config.NETWORK.displayPing) wrapper.appendChild(this.getDomNetworkPing());
         if (this.config.RAM.displayRam) wrapper.appendChild(this.getDomMemory());
         if (this.config.STORAGE.displayStorage) wrapper.appendChild(this.getDomStorage());
         if (this.config.CPU.displayType) wrapper.appendChild(this.getDomCPUType());
@@ -379,6 +387,15 @@ Module.register('MMM-Pinfo', {
             this.config.NETWORK.labelMac,
             this.status.NETWORK.mac,
             'mac'
+        );
+    },
+
+    getDomNetworkPing: function() {
+        return this.createItemElement(
+            this.config.NETWORK.orderPing,
+            this.config.NETWORK.labelPing,
+            this.status.NETWORK.ping,
+            'netPing'
         );
     },
 

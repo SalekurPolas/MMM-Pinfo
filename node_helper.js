@@ -22,7 +22,8 @@ module.exports = NodeHelper.create({
             type: 'unknown',
             ipv4: 'unknown',
             ipv6: 'unknown',
-            mac: 'unknown'
+            mac: 'unknown',
+            ping: 'unknown'
           },
           MEMORY: {
             total: 0,
@@ -97,6 +98,7 @@ module.exports = NodeHelper.create({
     async collectDynamicInfo() {
         await Promise.allSettled([
             this.getNetworkInfo(),
+            this.getNetworkPing(),
             this.getMemoryInfo(),
             this.getStorageInfo(),
             this.getCPUInfo(),
@@ -158,6 +160,25 @@ module.exports = NodeHelper.create({
             }
         } catch (error) {
             Log.error(`Error while getting network info: ${error}`);
+        }
+    },
+
+    async getNetworkPing() {
+        if (!this.config.NETWORK || !this.config.NETWORK.displayPing) {
+            return;
+        }
+
+        try {
+            const host = this.config.NETWORK.pingHost || null;
+            const latency = await si.inetLatency(host);
+
+            if (typeof latency === 'number' && latency >= 0) {
+                this.status['NETWORK'].ping = Math.round(latency) + 'ms';
+            } else {
+                this.status['NETWORK'].ping = 'Offline';
+            }
+        } catch (error) {
+            this.status['NETWORK'].ping = 'Offline';
         }
     },
 
