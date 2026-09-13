@@ -48,6 +48,7 @@ module.exports = NodeHelper.create({
             this.collectStaticInfo();
         } else if (notification === "SUSPEND") {
             this.isSuspended = true;
+            
             if (this.timer) {
                 clearTimeout(this.timer);
                 this.timer = null;
@@ -66,6 +67,7 @@ module.exports = NodeHelper.create({
             this.getOSInfo(),
             this.getCPUType()
         ]);
+
         this.scheduler();
     },
 
@@ -80,6 +82,7 @@ module.exports = NodeHelper.create({
         }
 
         await this.collectDynamicInfo();
+
         this.sendSocketNotification('STATUS', this.status);
 
         if (!this.isSuspended) {
@@ -133,6 +136,7 @@ module.exports = NodeHelper.create({
         try {
             const defaultInt = await si.networkInterfaceDefault().catch(() => null);
             const data = await si.networkInterfaces();
+
             if (Array.isArray(data)) {
                 let net = null;
                 if (defaultInt) {
@@ -157,6 +161,7 @@ module.exports = NodeHelper.create({
     async getMemoryInfo() {
         try {
             const data = await si.mem();
+
             if (data && data.total > 0) {
                 const usedBytes = Math.max(0, (data.used || 0) - (data.buffcache || 0));
                 this.status['MEMORY'].total = this.convert(data.total, 0);
@@ -171,6 +176,7 @@ module.exports = NodeHelper.create({
     async getStorageInfo() {
         try {
             const data = await si.fsSize();
+            
             if (Array.isArray(data) && data.length > 0) {
                 const targetMount = this.config.mount || null;
                 let partition = null;
@@ -179,17 +185,17 @@ module.exports = NodeHelper.create({
                     partition = data.find(p => p.mount && p.mount.toLowerCase() === targetMount.toLowerCase());
                 }
 
-                // Fallback 1: Linux root '/'
+                // fallback for linux root '/'
                 if (!partition) {
                     partition = data.find(p => p.mount === '/');
                 }
 
-                // Fallback 2: Windows primary drive 'C:'
+                // fallback for windows primary drive 'C:'
                 if (!partition) {
                     partition = data.find(p => p.mount && p.mount.toUpperCase().startsWith('C:'));
                 }
 
-                // Fallback 3: First partition with non-zero size
+                // fallback for first partition with non-zero size
                 if (!partition) {
                     partition = data.find(p => p.size > 0);
                 }
@@ -197,9 +203,7 @@ module.exports = NodeHelper.create({
                 if (partition) {
                     this.status['STORAGE'].total = this.convert(partition.size, 2);
                     this.status['STORAGE'].used = this.convert(partition.used, 2);
-                    this.status['STORAGE'].percent = typeof partition.use === 'number'
-                        ? partition.use
-                        : (partition.size > 0 ? Math.round((partition.used / partition.size) * 100) : 0);
+                    this.status['STORAGE'].percent = typeof partition.use === 'number' ? partition.use : (partition.size > 0 ? Math.round((partition.used / partition.size) * 100) : 0);
                 }
             }
         } catch (error) {
@@ -219,6 +223,7 @@ module.exports = NodeHelper.create({
     async getCPUInfo() {
         try {
             const load = await si.currentLoad();
+
             if (load && typeof load.currentLoad === 'number') {
                 this.status['CPU'].usage = load.currentLoad.toFixed(0);
             }
@@ -228,6 +233,7 @@ module.exports = NodeHelper.create({
 
         try {
             const data = await si.cpuTemperature();
+
             if (data && data.main !== null && data.main !== undefined && !isNaN(data.main) && data.main >= 0) {
                 this.status['CPU'].temp = Number(data.main).toFixed(1);
             } else {
@@ -241,7 +247,9 @@ module.exports = NodeHelper.create({
 
     convert(octet, FixTo = 2) {
         if (octet === null || octet === undefined || isNaN(octet)) return '0B';
+        
         octet = Math.abs(parseInt(octet, 10));
+
         if (octet === 0) return '0B';
 
         const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
@@ -258,7 +266,9 @@ module.exports = NodeHelper.create({
 
     convertTime(seconds) {
         if (typeof seconds !== 'number' || isNaN(seconds) || seconds < 0) return '0 seconds';
+        
         let humanTime;
+        
         if (seconds > 60*60*24) {
             humanTime = Math.round(seconds/(60*60*24)) + ' days';
         } else if (seconds > 60*60) {
@@ -268,6 +278,7 @@ module.exports = NodeHelper.create({
         } else {
             humanTime = Math.round(seconds) + ' seconds';
         }
+
         return humanTime;
     },
 

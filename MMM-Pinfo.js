@@ -14,7 +14,7 @@ Module.register('MMM-Pinfo', {
         mount: null,
         icons: {
             model: 'fas fa-desktop',
-            serial: 'fas fa-barcode',
+            serial: 'fas fa-fingerprint',
             os: 'fas fa-compact-disc',
             netType: 'fas fa-network-wired',
             ipv4: 'fas fa-globe',
@@ -189,6 +189,7 @@ Module.register('MMM-Pinfo', {
         if (this.config.CPU.displayUsage) wrapper.appendChild(this.getDomCPUUsage());
         if (this.config.CPU.displayTemp) wrapper.appendChild(this.getDomCPUTemp());
         if (this.config.UPTIME.displayUptime) wrapper.appendChild(this.getDomUptime());
+        
         return wrapper;
     },
 
@@ -228,6 +229,7 @@ Module.register('MMM-Pinfo', {
         container.appendChild(value);
         wrapper.appendChild(label);
         wrapper.appendChild(container);
+        
         return wrapper;
     },
 
@@ -258,6 +260,7 @@ Module.register('MMM-Pinfo', {
 
         let total = document.createElement("div");
         total.className = "total";
+        
         if (typeof totalContent === 'string') {
             total.innerHTML = totalContent;
         } else if (totalContent !== null && totalContent !== undefined) {
@@ -266,8 +269,10 @@ Module.register('MMM-Pinfo', {
 
         let used = document.createElement("div");
         used.style.opacity = "0.75";
+        
         const clampedPercent = Math.max(0, Math.min(100, Math.round(percentValue || 0)));
         used.style.width = clampedPercent + "%";
+        
         if (usedContent) {
             used.innerHTML = usedContent;
         }
@@ -281,6 +286,7 @@ Module.register('MMM-Pinfo', {
         container.appendChild(total);
         wrapper.appendChild(label);
         wrapper.appendChild(container);
+        
         return wrapper;
     },
 
@@ -368,11 +374,13 @@ Module.register('MMM-Pinfo', {
     getDomCPUTemp: function() {
         const rawTemp = parseFloat(this.status.CPU.temp) || 0;
         let units = this.config.units;
+        
         if (!units && typeof config !== 'undefined' && config.units) {
             units = config.units;
         }
 
         let tempText;
+        
         if (units === 'imperial') {
             tempText = Math.round(rawTemp * 9/5 + 32) + '°F';
         } else {
@@ -391,6 +399,7 @@ Module.register('MMM-Pinfo', {
 
     getDomCPUUsage: function() {
         const usage = parseFloat(this.status.CPU.usage) || 0;
+        
         return this.createBarItemElement(
             this.config.CPU.orderUsage,
             this.config.CPU.labelUsage,
@@ -403,6 +412,7 @@ Module.register('MMM-Pinfo', {
 
     getDomMemory: function() {
         const percent = parseFloat(this.status.MEMORY.percent) || 0;
+        
         return this.createBarItemElement(
             this.config.RAM.orderRam,
             this.config.RAM.labelRam,
@@ -415,6 +425,7 @@ Module.register('MMM-Pinfo', {
 
     getDomStorage: function() {
         const percent = parseFloat(this.status.STORAGE.percent) || 0;
+
         return this.createBarItemElement(
             this.config.STORAGE.orderStorage,
             this.config.STORAGE.labelStorage,
@@ -428,12 +439,11 @@ Module.register('MMM-Pinfo', {
     checkWarning: function() {
         if (!this.config.WARNING || !this.config.WARNING.enable) return;
 
-        const interval = typeof this.config.WARNING.interval === 'number'
-            ? this.config.WARNING.interval
-            : 1000 * 60 * 5;
+        const interval = typeof this.config.WARNING.interval === 'number' ? this.config.WARNING.interval : 1000 * 60 * 5;
         const now = Date.now();
 
         const checks = this.config.WARNING.check || {};
+
         for (let name in checks) {
             const checkValue = checks[name];
             let actualValue = null;
@@ -515,9 +525,7 @@ Module.register('MMM-Pinfo', {
 
             for (const [key, sourceValue] of Object.entries(source)) {
                 const targetValue = output[key];
-                output[key] = isPlainObject(sourceValue)
-                    ? this.merge(isPlainObject(targetValue) ? targetValue : {}, sourceValue)
-                    : cloneValue(sourceValue);
+                output[key] = isPlainObject(sourceValue) ? this.merge(isPlainObject(targetValue) ? targetValue : {}, sourceValue) : cloneValue(sourceValue);
             }
         }
 
